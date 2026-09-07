@@ -4,7 +4,11 @@
 
 Article Craft is an open-source AI editorial workflow for writers who want to research, structure, review, fact-check, and improve articles while keeping themselves in the driver's seat. It ships as a portable [Agent Skill](https://agentskills.io/specification) plus an optional Python CLI.
 
+[![GitHub stars](https://img.shields.io/github/stars/TharunKumarReddyPolu/article-craft)](https://github.com/TharunKumarReddyPolu/article-craft/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/TharunKumarReddyPolu/article-craft)](https://github.com/TharunKumarReddyPolu/article-craft/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/TharunKumarReddyPolu/article-craft)](https://github.com/TharunKumarReddyPolu/article-craft/issues)
 [![License](https://img.shields.io/github/license/TharunKumarReddyPolu/article-craft)](LICENSE)
+[![Last Updated](https://img.shields.io/github/last-commit/TharunKumarReddyPolu/article-craft/main?label=Last%20Updated)](https://github.com/TharunKumarReddyPolu/article-craft/commits/main)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 [![CI](https://github.com/TharunKumarReddyPolu/article-craft/actions/workflows/ci.yml/badge.svg)](https://github.com/TharunKumarReddyPolu/article-craft/actions/workflows/ci.yml)
 [![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
