@@ -259,9 +259,16 @@ For **Medium policy changes**, CONTRIBUTING requires the official source URL, th
 
 If Article Craft helps you write and publish better articles, please consider:
 
-- ⭐ Starring the repository so other writers can find it
-- 🐛 [Opening issues](https://github.com/TharunKumarReddyPolu/article-craft/issues) for bugs or policy pages that have changed
-- 🔀 Contributing a platform adapter or editorial workflow
+<div align="center">
+
+[![Star this repo](https://img.shields.io/badge/⭐%20Star%20this%20repo-important?style=for-the-badge)](https://github.com/TharunKumarReddyPolu/article-craft/stargazers)
+[![Watch this repo](https://img.shields.io/badge/👁%20Watch%20this%20repo-informational?style=for-the-badge)](https://github.com/TharunKumarReddyPolu/article-craft/subscription)
+[![Fork this repo](https://img.shields.io/badge/🍴%20Fork%20this%20repo-success?style=for-the-badge)](https://github.com/TharunKumarReddyPolu/article-craft/fork)
+
+</div>
+
+- 🐛 [Opening issues](https://github.com/TharunKumarReddyPolu/article-craft/issues) for bugs or Medium policy pages that have changed
+- 🔀 Contributing a platform adapter, editorial workflow, or writing reference
 - ✍️ Writing about your experience using it — with attribution, of course
 
 ## 🌟 Star History
@@ -274,4 +281,10 @@ If Article Craft helps you write and publish better articles, please consider:
 
 ---
 
-**Research better, write clearer, publish with confidence — while you stay the author.** ✍️
+<div align="center">
+
+# **Write better articles, not more articles!** ✍️
+
+</div>
+
+> **Inspired by real editorial practice** — the craft of professional editors, the open [Agent Skills](https://agentskills.io) ecosystem, and Medium's published Help Center policies. **You stay the author. Happy writing! 🚀**
