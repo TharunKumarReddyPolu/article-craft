@@ -3,7 +3,8 @@
 **An AI editorial workflow for writing better articles.**
 
 <div align="center">
-<img width="1172" height="641" alt="Article Craft" src="https://github.com/user-attachments/assets/3aaec1b7-1f8d-4c62-8a34-92a7a19c68ec" />
+<img width="1172" height="541" alt="Article Craft Cropped" src="https://github.com/user-attachments/assets/aa47d3b2-2413-4089-bcbf-f95af499ded4" />
+
 
 
 Article Craft is an open-source AI editorial workflow for writers who want to research, structure, review, fact-check, and improve articles while keeping themselves in the driver's seat. It ships as a portable [Agent Skill](https://agentskills.io/specification) plus an optional Python CLI.
