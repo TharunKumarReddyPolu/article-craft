@@ -83,9 +83,9 @@ module = "tests.*"
 disallow_untyped_defs = false
 
 # The MCP server is an optional extra (article-craft[mcp]); CI type-checks
-# without it installed, so the mcp SDK imports are always ignored there.
+# without the mcp SDK installed, so its imports are ignored everywhere.
 [[tool.mypy.overrides]]
-module = "article_craft.mcp.*"
+module = "mcp.*"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

@@ -10,12 +10,12 @@ Run with: ``article-craft-mcp`` (stdio transport, local-first).
 
 from __future__ import annotations
 
+# Support both MCP SDK generations via importlib: with the optional extra
+# absent (e.g. CI without article-craft[mcp]) the modules resolve to Any
+# through the mypy ignore_missing_imports override, and static import
+# conflicts between the two SDK layouts never arise.
+import importlib
 from pathlib import Path
-
-try:  # mcp 2.x
-    from mcp.server.mcpserver import MCPServer as _Server
-except ImportError:  # mcp 1.x
-    from mcp.server.fastmcp import FastMCP as _Server  # type: ignore[no-redef,attr-defined]
 
 from article_craft.editorial.adaptation import adapt_for_social, render_social_post
 from article_craft.exporter import export_for_platform, render_export_report
@@ -24,6 +24,23 @@ from article_craft.parsing import ArticleParseError, parse_article_file
 from article_craft.platforms.base import available_platforms, get_adapter
 from article_craft.reports import images_platform_check, render_platform_check_for, render_review
 from article_craft.research.claims import factcheck_report_markdown
+
+
+def _load_server_cls() -> type:
+    for module_name, attr in (
+        ("mcp.server.mcpserver", "MCPServer"),
+        ("mcp.server.fastmcp", "FastMCP"),
+    ):
+        try:
+            return getattr(importlib.import_module(module_name), attr)
+        except ImportError:
+            continue
+    raise ImportError(
+        "The MCP SDK is not installed. Install it with: pip install 'article-craft[mcp]'"
+    )
+
+
+_Server = _load_server_cls()
 
 mcp = _Server(
     "article-craft",
