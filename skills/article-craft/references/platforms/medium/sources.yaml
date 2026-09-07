@@ -1,0 +1,148 @@
+# Medium Reference Sources
+#
+# This is the source inventory for every rule summarized in
+# skills/article-craft/references/platforms/medium/*.md
+#
+# Fields per source:
+#   id            stable identifier used in the reference files
+#   title         exact title of the official page
+#   url           canonical URL
+#   authority     OFFICIAL (Medium Help Center / official blog) for all entries here
+#   date_updated  last-updated date shown on the page, if any
+#   last_verified date the Article Craft maintainers last fetched and re-read the page
+#   rules         which reference files this source backs
+#   notes         caveats, e.g. quoted policy language worth preserving verbatim
+#
+# Policy: Medium's policies change. Rules are summarized here as reference
+# material and dated. When Medium updates a page, update the summary AND bump
+# last_verified. Never present a community convention as an official rule.
+
+sources:
+  - id: medium-ai-content-policy
+    title: "Artificial Intelligence (AI) content policy"
+    url: "https://help.medium.com/hc/en-us/articles/22576852947223-Artificial-Intelligence-AI-content-policy"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-06"
+    rules: [ai-policy]
+    notes: >
+      Verbatim: "AI-generated writing (disclosed as such or not) is not allowed
+      to be paywalled as part of our Partner Program." Undisclosed AI-generated
+      writing receives Network Only distribution. AI-assistive technology
+      (outlining, spelling, grammar, fact-checking) is allowed but "any story
+      incorporating AI assistance be clearly labeled as such." AI-generated
+      images must include a caption identifying them as such. Disclosure
+      example: "This story was written with the assistance of an AI writing
+      program." No AI content created solely to rank in SEO for affiliate
+      promotion. No AI rephrase/summarize/remix that "results in a derivative
+      work which closely resembles the original content in concept, structure,
+      or essential elements." No easily disprovable AI-hallucinated facts.
+
+  - id: medium-distribution-guidelines
+    title: "Medium's Distribution Guidelines: How curators review stories for Boost, General, and Network Distribution"
+    url: "https://help.medium.com/hc/en-us/articles/360006362473-Medium-s-Distribution-Guidelines-How-curators-review-stories-for-Boost-General-and-Network-Distribution"
+    authority: OFFICIAL
+    date_updated: "2026-06-29"
+    last_verified: "2026-09-06"
+    rules: [distribution, titles, images, topics]
+    notes: >
+      Three distribution tiers: Network (baseline), General, Boost. Boost
+      criteria include writer's first-hand experience, human-created text,
+      value and impact, respect for the reader, non-derivative content, and
+      craftsmanship. Disqualifiers from General Distribution: clickbait,
+      unconstructive negativity, low-value content (including AI-generated
+      content, summaries of other sources, link round-ups), NSFW,
+      misinformation, topic/mentions spamming, Rules violations. Stories about
+      Medium itself or the Partner Program get Network Distribution only.
+      Verbatim: "these elements should not be interpreted as a checklist of
+      components that guarantee Boost."
+
+  - id: medium-plagiarism-guidelines
+    title: "Plagiarism Guidelines"
+    url: "https://help.medium.com/hc/en-us/articles/360041640213-Plagiarism-Guidelines"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-06"
+    rules: [plagiarism]
+    notes: >
+      Plagiarism includes presenting others' words as your own, copying
+      sentences/paragraphs/articles, "slightly rewriting or paraphrasing
+      someone else's work (often called 'mosaic plagiarism')", unauthorized
+      translation/spinning, and using AI tools to rephrase/summarize/remix
+      existing content so the result "closely resembles the original content
+      in concept, structure, or essential elements." Crediting a source does
+      not supplant the need to secure permissions. Violations lead to
+      suspension with no appeal. Citations "can be added using numbered
+      superscript text formatting, or other appropriate methods."
+
+  - id: medium-rules
+    title: "Medium Rules"
+    url: "https://help.medium.com/hc/en-us/articles/213477928-Medium-Rules"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-06"
+    rules: [publishing, formatting]
+    notes: >
+      Includes: Duplicate Content rule (no duplicate copies on Medium;
+      cross-posting your own blog content is allowed if you own the rights),
+      spam/misuse list (content primarily to drive traffic or raise search
+      rankings, scraping and reposting, re-using content templates with slight
+      modifications across posts, bulk automated interactions), affiliate
+      links allowed with FTC-mandated disclosure, third-party advertising and
+      sponsorships not allowed, first-party promotion allowed, embeds must not
+      collect personal data onsite, no paid/bulk/non-genuine interactions.
+
+  - id: medium-canonical-link
+    title: "Set a canonical link"
+    url: "https://help.medium.com/hc/en-us/articles/360033930293-Set-a-canonical-link"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-06"
+    rules: [canonical-links]
+    notes: >
+      Only the story's author can set a canonical link. Use when the same
+      content is posted to multiple platforms so search engines can identify
+      the ultimate source; sites publishing duplicates without canonical
+      indication may be penalized in search rankings. Medium's import tool
+      sets the canonical link automatically.
+
+  - id: medium-first-story
+    title: "Writing and publishing your first story"
+    url: "https://help.medium.com/hc/en-us/articles/225168768-Writing-and-publishing-your-first-story"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-06"
+    rules: [formatting, publishing]
+    notes: >
+      Story structure: optional title and subtitle fields at the top of a
+      draft. Images can be uploaded or inserted from Unsplash. Third-party
+      embeds are added by pasting the URL (embed code is not supported).
+      Publish menu offers topics, story preview customization, paywall toggle
+      for Partner Program members.
+
+  - id: medium-publications-best-practices
+    title: "Medium Publications Best Practices and Guidelines"
+    url: "https://help.medium.com/hc/en-us/articles/41530252213655-Medium-Publications-Best-Practices-and-Guidelines"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-06"
+    rules: [publishing]
+    notes: >
+      Publication etiquette: use open submissions, do not bulk-add writers,
+      editors must not make major changes without writer input, no third-party
+      advertising, do not republish publication content off-platform without
+      each author's permission.
+
+  - id: medium-quality-guidelines-referenced
+    title: "Medium's Quality Guidelines (referenced by the AI content policy)"
+    url: "https://help.medium.com/hc/en-us/articles/31543021625431-Medium-s-Quality-Guidelines"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-06"
+    rules: [distribution]
+    notes: >
+      The AI content policy links to Medium's Quality Guidelines for more on
+      quality and distribution standards. Article Craft treats the
+      Distribution Guidelines (verified 2026-06-29 version) as the primary
+      quality source; this URL is recorded because the AI policy page
+      references it. Verify before quoting.

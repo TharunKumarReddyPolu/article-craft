@@ -1,0 +1,16 @@
+{
+  "name": "article-craft",
+  "owner": {
+    "name": "Article Craft contributors"
+  },
+  "plugins": [
+    {
+      "name": "article-craft",
+      "source": "./skills/article-craft",
+      "description": "An AI editorial workflow for writing better articles: research, structure, review, fact-check, originality, and Medium preparation.",
+      "version": "1.0.0",
+      "category": "writing",
+      "keywords": ["writing", "editorial", "medium", "articles", "fact-checking"]
+    }
+  ]
+}
