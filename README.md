@@ -2,6 +2,10 @@
 
 **An AI editorial workflow for writing better articles.**
 
+<div align="center">
+<img width="1172" height="641" alt="Article Craft" src="https://github.com/user-attachments/assets/3aaec1b7-1f8d-4c62-8a34-92a7a19c68ec" />
+
+
 Article Craft is an open-source AI editorial workflow for writers who want to research, structure, review, fact-check, and improve articles while keeping themselves in the driver's seat. It ships as a portable [Agent Skill](https://agentskills.io/specification) plus an optional Python CLI.
 
 [![GitHub stars](https://img.shields.io/github/stars/TharunKumarReddyPolu/article-craft?cacheSeconds=86400)](https://github.com/TharunKumarReddyPolu/article-craft/stargazers)
@@ -13,15 +17,12 @@ Article Craft is an open-source AI editorial workflow for writers who want to re
 [![CI](https://github.com/TharunKumarReddyPolu/article-craft/actions/workflows/ci.yml/badge.svg)](https://github.com/TharunKumarReddyPolu/article-craft/actions/workflows/ci.yml)
 [![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
+</div>
+
 It is not an article generator. It is an experienced technical editor living inside your AI coding agent — one that asks who your reader is, demands sources for your claims, warns you before you paraphrase too closely, and checks your draft against Medium's actual published policies before you hit publish.
 
 ```
-Human ideas
-+ Human experience
-+ AI-assisted research
-+ AI-assisted editing
-========================
-Better writing
+Human ideas + Human experience + AI-assisted research + AI-assisted editing  == Better writing
 ```
 
 ## 📋 Table of Contents
