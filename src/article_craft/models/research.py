@@ -62,6 +62,24 @@ class Claim(BaseModel):
     verification_note: str | None = None
 
 
+class ClaimConflict(BaseModel):
+    """Two sources making conflicting claims about the same fact.
+
+    ``resolution`` names which claim the source hierarchy favors (higher
+    authority wins per references/research/source-hierarchy.md); when tiers
+    tie, resolution stays None and the conflict is surfaced to the author
+    instead of silently decided.
+    """
+
+    topic: str
+    claim_a: str
+    claim_b: str
+    source_a: int | None = None  # index into ResearchDoc.sources
+    source_b: int | None = None
+    resolution: str | None = None  # "a", "b", or None when unresolved
+    resolution_reason: str | None = None
+
+
 class ResearchDoc(BaseModel):
     """The research artifact. Stays separate from the final article."""
 
@@ -70,6 +88,7 @@ class ResearchDoc(BaseModel):
     sources: list[Source] = Field(default_factory=list)
     claims: list[Claim] = Field(default_factory=list)
     contradictions: list[str] = Field(default_factory=list)
+    conflicts: list[ClaimConflict] = Field(default_factory=list)
     statistics: list[str] = Field(default_factory=list)
     claims_requiring_verification: list[str] = Field(default_factory=list)
     potential_examples: list[str] = Field(default_factory=list)

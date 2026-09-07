@@ -1,30 +1,31 @@
 # Roadmap
 
-V1 is deliberately scoped: a platform-agnostic editorial core, a
-production-quality Medium adapter, and the Agent Skill. Everything below is
-a possibility, not a promise — and nothing here is implemented yet.
+Version 1 delivered the platform-agnostic editorial core, a production-quality
+Medium adapter, and the Agent Skill. **Version 2 (released 2026-09-07)** added
+the DEV.to, Hashnode, Substack, and LinkedIn adapters, the MCP server, and
+four editorial capabilities — everything in the first list below is now
+implemented. What remains is a possibility, not a promise.
 
-## V2 candidates
+## Shipped in V2
 
-- **DEV.to adapter** — DEV.to has a frontmatter contract (`title`,
-  `published`, `tags`, `cover_image`, `canonical_url`) and liquid-tag embeds.
-  Needs research against dev.to's official docs before any rules are
-  encoded. The canonical model already carries `canonical_url` and topics.
-- **LinkedIn adapter** — fundamentally different: feed-first, no markdown,
-  different length norms. Needs its own editorial research.
-- **Substack adapter** — newsletter-specific checks (email rendering,
-  subject line vs. article title, post vs. email sections).
-- **Ghost / Hashnode adapters** — both markdown-native; likely the easiest
-  ports once the adapter pattern is proven twice.
-- **MCP server** — expose review/check/factcheck as MCP tools so non-CLI
-  agents can call them directly.
-- **Advanced research mode** — structured source-interview workflow,
-  contradiction tracking across multiple sources, automatic research.md
-  updates during drafting.
-- **Image recommendations** — diagram/alt-text assistance (generation stays
-  out of scope; captioning/alt-text checking is in spirit).
-- **Social post adaptation** — derive a canonical article's summary thread
-  *with attribution to the article*, keeping the canonical model primary.
+- **DEV.to adapter** — frontmatter contract, liquid-tag embeds, AI-labeling
+  and plagiarism checks from DEV's official guidelines.
+- **Hashnode adapter** — publishing mechanics and community/conduct checks
+  from Hashnode's official support documentation.
+- **Substack adapter** — title-as-subject checks, Content Guidelines, and
+  Substack's 2026 AI-detection awareness.
+- **LinkedIn adapter** — post-length limit, AI-slop policy, Professional
+  Community Policies; operates on adaptations, not raw markdown.
+- **MCP server** — `article-craft-mcp` exposes the deterministic engines as
+  MCP tools over stdio (`article-craft[mcp]`).
+- **Advanced research mode** — contradiction tracking across sources with
+  authority-based resolution, plus the research-interview workflow.
+- **Image & alt-text checks** — deterministic review of image references,
+  alt-text presence and quality.
+- **Social post adaptation** — attributed posts derived from the canonical
+  article; every claim traces back; nothing auto-published.
+- **Export prep** — platform-ready files written locally for all five
+  platforms (zero network calls).
 
 ## V3 possibilities
 

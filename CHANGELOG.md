@@ -4,6 +4,63 @@ All notable changes to Article Craft are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows [Semantic Versioning](https://semver.org/).
 
+## 2.0.0 — 2026-09-07
+
+Four new platform adapters, an MCP server, and four editorial capabilities.
+Every platform rule is researched from official sources first and stored as
+versioned reference material; no rule ships without a cited source or an
+explicit HEURISTIC tag.
+
+### Added
+
+- **DEV.to adapter** (`platforms/devto/`): front-matter contract (title,
+  published, ≤4 tags, cover_image, canonical_url), liquid-tag embed guidance,
+  AI-assisted content labeling, plagiarism checks — from DEV's editor guide
+  and official AI/plagiarism guidelines.
+- **Hashnode adapter** (`platforms/hashnode/`): publishing mechanics, embeds,
+  community/conduct checks — from Hashnode's official support documentation.
+- **Substack adapter** (`platforms/substack/`): title-as-email-subject checks,
+  Content Guidelines policy checks, and AI-content awareness including
+  Substack's 2026 reader-facing AI detection — from Substack's official
+  Content Guidelines and Help Center.
+- **LinkedIn adapter** (`platforms/linkedin/`): 3,000-character post limit,
+  AI-slop policy checks, Professional Community Policies — from LinkedIn's
+  official Help Center. Operates on *adaptations* (posts), not raw markdown.
+- **Platform checklists**: `checklists/devto.md`, `hashnode.md`,
+  `substack.md`, `linkedin.md`, mirroring the V1 medium checklist.
+- **Image & alt-text engine** (`editorial/images.py`): alt-text presence,
+  quality heuristics, repeated/placeholder alt text, cover image checks —
+  deterministic, no generation.
+- **Advanced research engine** (`research/contradictions.py`): detects
+  contradictions across research sources, resolves them by source tier with
+  explicit conflict reporting.
+- **Social adaptation** (`editorial/adaptation.py` + `article-craft adapt`):
+  derives attributed social posts from the canonical article. Every claim
+  traces to the article; nothing is invented; nothing is auto-published.
+- **Export prep** (`exporter.py` + `article-craft export`): writes
+  platform-ready files locally (zero network, no publishing) for all five
+  platforms.
+- **MCP server** (`article-craft[mcp]`): exposes the deterministic engines
+  (review, check, factcheck, images, titles, outline) as MCP tools over
+  stdio. Same engines as the CLI; no LLM inside; no network calls.
+- **New workflows**: `platform-check.md`, `research-interview.md`,
+  `social-adaptation.md`.
+- **New references**: `references/platforms/{devto,hashnode,substack,
+  linkedin}/` each with an overview and a `sources.yaml` source inventory.
+
+### Changed
+
+- Platform adapters share a common base (`platforms/base.py`) with a
+  uniform `full_report` signature and a shared source-verification guard.
+- `article-craft check --platform` accepts all five platforms plus generic.
+- SKILL.md description, workflow routing, and hard boundaries updated for
+  the five implemented platforms and the three new workflows.
+
+### Removed
+
+- The V1 placeholder `platforms/future.py` stubs (DEV/LinkedIn etc. are now
+  real adapters).
+
 ## 1.0.0 — 2026-09-06
 
 Initial V1 release.

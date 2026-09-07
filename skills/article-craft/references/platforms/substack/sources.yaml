@@ -1,0 +1,86 @@
+# Substack Reference Sources
+
+sources:
+  - id: substack-content-guidelines
+    title: "Content Guidelines - Substack"
+    url: https://substack.com/content
+    authority: OFFICIAL
+    date_updated: 2026-07-20
+    last_verified: 2026-09-07
+    covers:
+      - plagiarism: do not publish others' material claimed as your own
+      - spam and phishing: no purchased/scraped lists; no spam interactions
+      - "Marketing and Promotion": platform is for high-quality editorial
+        content; publications whose primary purpose is advertising external
+        products, driving third-party traffic, or SEO enhancement are not
+        permitted
+      - legal/IP responsibility on the publisher; impersonation banned
+    notes: >
+      The Marketing and Promotion clause is stricter than Medium's
+      distribution guidance and drives the adapter's ERROR-grade
+      promotional-density check.
+
+  - id: substack-title-testing
+    title: "How do I test different titles for email newsletters on Substack?"
+    url: https://support.substack.com/hc/en-us/articles/36026518014100-How-do-I-test-different-titles-for-email-newsletters-on-Substack
+    authority: OFFICIAL
+    date_updated: 2026-08-25
+    last_verified: 2026-09-07
+    covers:
+      - post title doubles as email subject line by default
+      - "Run a title test" A/B tests alternate subject lines
+      - available to publishers with 200+ subscribers
+      - recommended test: 50% of recipients, one hour
+    notes: >
+      Confirms the title/subject-line duality the adapter checks for.
+
+  - id: substack-ai-detection
+    title: "How can I detect AI on Substack?"
+    url: https://support.substack.com/hc/en-us/articles/50891130623508-How-can-I-detect-AI-on-Substack
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - "Scan for AI text" reader-facing tool (Pangram), for posts/notes
+        published on or after 2026-07-21
+      - estimates human vs AI-assisted percentage; an estimate, not proof
+      - unavailable for video/audio, standalone sites, or emails
+      - "Block AI training" crawler toggle in publication settings
+    notes: >
+      Article Craft surfaces this mechanically as reader-side AI exposure.
+      It never provides detection-evasion advice.
+
+  - id: substack-alt-text
+    title: "How do I add alt text to an image on a Substack post?"
+    url: https://support.substack.com/hc/en-us/articles/48404618511508-How-do-I-add-alt-text-to-an-image-on-a-Substack-post
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - images support alt text via image menu -> "Edit alt text"
+      - "clear, concise description" recommended
+    notes: null
+
+  - id: substack-tags
+    title: "How do I add tags to Substack posts?"
+    url: https://support.substack.com/hc/en-us/articles/15325400348948-How-do-I-add-tags-to-Substack-posts
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - keyword tags on posts; custom tags via settings or draft settings
+      - no documented maximum tag count
+    notes: null
+
+  - id: substack-code-blocks
+    title: "How do I embed a code block in a Substack post?"
+    url: https://support.substack.com/hc/en-us/articles/46860260687380-How-do-I-embed-a-code-block-in-a-Substack-post
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - code blocks with syntax highlighting and automatic language detection
+      - renders in email, web, and app; copy button on web
+    notes: >
+      Untagged fenced code is a HEURISTIC suggestion only; the editor can
+      auto-detect languages.

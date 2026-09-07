@@ -1,5 +1,6 @@
 """Pydantic models: the canonical, platform-agnostic data layer."""
 
+from article_craft.models.adaptation import PlatformExport, SocialPost
 from article_craft.models.article import (
     ARTICLE_TYPES,
     PLATFORMS,
@@ -15,6 +16,7 @@ from article_craft.models.article import (
 from article_craft.models.research import (
     SOURCE_TIERS,
     Claim,
+    ClaimConflict,
     ClaimStatus,
     ResearchDoc,
     Source,
@@ -49,6 +51,7 @@ __all__ = [
     "Audience",
     "AuthorProfile",
     "Claim",
+    "ClaimConflict",
     "ClaimStatus",
     "CodeBlock",
     "Dimension",
@@ -60,6 +63,7 @@ __all__ = [
     "PlatformCheck",
     "PlatformCheckReport",
     "PlatformCheckStatus",
+    "PlatformExport",
     "PublishRecommendation",
     "ResearchDoc",
     "ReviewIssue",
@@ -67,6 +71,7 @@ __all__ = [
     "RuleClass",
     "Section",
     "Severity",
+    "SocialPost",
     "Source",
     "SourceTier",
     "Verdict",

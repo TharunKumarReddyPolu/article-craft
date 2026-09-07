@@ -7,12 +7,12 @@ import pytest
 from article_craft.models.review import PlatformCheckStatus, RuleClass
 from article_craft.parsing import parse_article_text
 from article_craft.platforms.base import available_platforms, get_adapter
-from article_craft.platforms.future import (
-    DevToAdapter,
-    LinkedInAdapter,
-    SubstackAdapter,
-)
+from article_craft.platforms.devto import DevToAdapter
+from article_craft.platforms.future import GhostAdapter
+from article_craft.platforms.hashnode import HashnodeAdapter
+from article_craft.platforms.linkedin import LinkedInAdapter
 from article_craft.platforms.medium import MediumAdapter, medium_pre_publish_check
+from article_craft.platforms.substack import SubstackAdapter
 
 CLEAN = """---
 title: Why our Kafka consumer fell seven hours behind
@@ -81,17 +81,26 @@ class TestRegistry:
         assert "medium" in available_platforms()
         assert get_adapter("medium") is MediumAdapter
 
-    def test_future_platforms_not_registered(self) -> None:
-        # Stubs must NOT be registered as if functional.
-        assert "devto" not in available_platforms()
-        assert "linkedin" not in available_platforms()
-        assert "substack" not in available_platforms()
+    def test_v2_platforms_registered(self) -> None:
+        assert get_adapter("devto") is DevToAdapter
+        assert get_adapter("hashnode") is HashnodeAdapter
+        assert get_adapter("substack") is SubstackAdapter
+        assert get_adapter("linkedin") is LinkedInAdapter
 
-    @pytest.mark.parametrize("stub_cls", [DevToAdapter, LinkedInAdapter, SubstackAdapter])
-    def test_stubs_raise_actionable(self, stub_cls: type) -> None:
+    def test_ghost_stub_raises_actionable(self) -> None:
         article = parse_article_text(CLEAN)
         with pytest.raises(NotImplementedError, match="not implemented in Article Craft"):
-            stub_cls().review_title(article)
+            GhostAdapter().review_title(article)
+
+    def test_v2_adapters_produce_reports(self) -> None:
+        """Every V2 adapter must produce a full report for a clean article
+        without crashing, citing only registered platforms' source ids."""
+        article = parse_article_text(CLEAN)
+        for adapter in (DevToAdapter(), HashnodeAdapter(), SubstackAdapter(), LinkedInAdapter()):
+            report = adapter.full_report(article)
+            assert report.platform == adapter.platform_id
+            assert report.checks
+            assert "do not guarantee" in report.disclaimer
 
 
 class TestMediumAdapterClean:

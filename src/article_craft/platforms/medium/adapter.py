@@ -9,10 +9,7 @@ distribution or Boost outcomes.
 from __future__ import annotations
 
 import re
-from functools import lru_cache
 from pathlib import Path
-
-import yaml
 
 from article_craft.editorial.titles import analyze_title
 from article_craft.models.article import Article
@@ -25,7 +22,7 @@ from article_craft.models.review import (
     PlatformCheckStatus,
     RuleClass,
 )
-from article_craft.platforms.base import register_adapter
+from article_craft.platforms.base import SourcesBackedAdapter, register_adapter
 
 _SOURCES_PATH = (
     Path(__file__).resolve().parents[4]
@@ -37,21 +34,16 @@ _SOURCES_PATH = (
     / "sources.yaml"
 )
 
-
-@lru_cache(maxsize=1)
-def _known_source_ids() -> frozenset[str]:
-    """Source ids defined in sources.yaml. Adapter checks must only cite ids
-    that exist here — a guard against drifting from the documented sources."""
-    try:
-        data = yaml.safe_load(_SOURCES_PATH.read_text(encoding="utf-8"))
-        return frozenset(entry["id"] for entry in data.get("sources", []))
-    except (OSError, yaml.YAMLError):
-        return frozenset()
+_MEDIUM_DISCLAIMER = (
+    "These checks are based on current published guidance and editorial "
+    "heuristics. They do not guarantee Medium distribution."
+)
 
 
 @register_adapter
-class MediumAdapter:
+class MediumAdapter(SourcesBackedAdapter):
     platform_id = "medium"
+    _sources_path = _SOURCES_PATH
 
     # ------------------------------------------------------------------ #
     # API
@@ -559,42 +551,16 @@ class MediumAdapter:
 
     # ------------------------------------------------------------------ #
 
-    def full_report(self, article: Article) -> PlatformCheckReport:
+    def full_report(
+        self,
+        article: Article,
+        extra_checks: list[PlatformCheck] | None = None,
+        disclaimer: str | None = None,
+        **kwargs: object,
+    ) -> PlatformCheckReport:
         """Aggregate all categories into a PlatformCheckReport."""
-        checks = (
-            self.review_title(article)
-            + self.review_structure(article)
-            + self.review_formatting(article)
-            + self.review_policy(article)
-            + self.review_distribution(article)
-        )
-        if any(c.status is PlatformCheckStatus.ERROR for c in checks):
-            overall = PlatformCheckStatus.ERROR
-        elif any(c.status is PlatformCheckStatus.WARNING for c in checks):
-            overall = PlatformCheckStatus.WARNING
-        else:
-            overall = PlatformCheckStatus.PASS
-        fixes = [
-            f"{c.category}: {c.detail}"
-            for c in checks
-            if c.status in (PlatformCheckStatus.ERROR, PlatformCheckStatus.WARNING)
-        ]
-        # Verify cited sources exist in sources.yaml (honesty guard).
-        for check in checks:
-            if (
-                check.source_id
-                and _known_source_ids()
-                and check.source_id not in _known_source_ids()
-            ):
-                raise ValueError(
-                    f"Adapter cites unknown source_id '{check.source_id}' — add it "
-                    "to skills/article-craft/references/platforms/medium/sources.yaml"
-                )
-        return PlatformCheckReport(
-            platform=self.platform_id,
-            overall=overall,
-            checks=checks,
-            fix_before_publishing=fixes,
+        return super().full_report(
+            article, extra_checks=extra_checks, disclaimer=disclaimer or _MEDIUM_DISCLAIMER
         )
 
 

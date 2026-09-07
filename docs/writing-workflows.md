@@ -6,7 +6,7 @@ The full editorial pipeline in practice, with the judgment each step needs.
 
 ```
 idea → brief → research → outline → DRAFT (you) → review → fact-check
-     → originality → medium-check → checklist → publish (you)
+     → originality → platform-check → adapt/export → checklist → publish (you)
 ```
 
 Steps before and after the draft are where the tooling helps most; the draft
@@ -91,16 +91,30 @@ against them. It flags sentence-level overlap, structural mirroring,
 distinctive-example reuse, and unattributed quotes — with fixes. The goal
 is an article that stands without the source, not one that hides it.
 
-## 8. Medium check (`article-craft check --platform medium`)
+## 8. Platform check (`article-craft check --platform <id>`)
 
-Policy-grounded categories: title, subtitle, structure, formatting, AI
-policy, canonical link, affiliate disclosure, topics/mentions, distribution
-risks. Each finding is tagged POLICY / RECOMMENDATION / HEURISTIC with its
-official source. Output ends with the standing disclaimer — checks don't
-guarantee distribution.
+Policy-grounded categories per platform — Medium, DEV.to, Hashnode,
+Substack, or LinkedIn. Each finding is tagged POLICY / RECOMMENDATION /
+HEURISTIC with its official source from that platform's `sources.yaml`.
+Where a platform publishes no policy on a topic, the report says NOT
+CHECKED rather than guessing. Output ends with the standing disclaimer —
+checks don't guarantee distribution or reach on any platform.
 
-## 9. Final checklist and publish
+## 9. Adapt and export
 
-Work `checklists/medium.md` by hand. The last items are deliberately human:
-read it top to bottom, confirm the voice is yours, confirm every factual
-claim, final proofread. Then click Publish yourself.
+Two derived artifacts, both local-only:
+
+- `article-craft adapt article.md --platform linkedin` — an attributed post
+  derived from the article. Every factual statement traces to the article;
+  the engine refuses to invent claims. You edit the post, then post it
+  yourself.
+- `article-craft export article.md --platform devto` — platform-ready
+  files (frontmatter-composed markdown, or post text for LinkedIn/
+  Substack) written to disk. Zero network calls; nothing is published.
+
+## 10. Final checklist and publish
+
+Work the platform checklist (`checklists/<platform>.md`) by hand. The last
+items are deliberately human: read it top to bottom, confirm the voice is
+yours, confirm every factual claim, final proofread. Then click Publish
+yourself.

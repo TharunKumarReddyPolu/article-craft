@@ -26,7 +26,14 @@ ARTICLE_TYPES: tuple[str, ...] = (
     "listicle",
 )
 
-PLATFORMS: tuple[str, ...] = ("medium", "generic")
+PLATFORMS: tuple[str, ...] = (
+    "medium",
+    "devto",
+    "hashnode",
+    "substack",
+    "linkedin",
+    "generic",
+)
 
 
 class Audience(BaseModel):

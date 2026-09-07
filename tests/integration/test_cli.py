@@ -198,11 +198,32 @@ class TestCheck:
                 "check",
                 str(FIXTURES / "excellent_technical.md"),
                 "--platform",
-                "linkedin",
+                "twitter",
             ],
         )
         assert result.exit_code == 2
-        assert "roadmap" in result.output
+
+    def test_linkedin_check_is_adaptation_review(self, workspace: Path) -> None:
+        """LinkedIn is implemented in V2 and reviews the adaptation, not raw
+        markdown — it must say so and exit with findings (adaptation needed)."""
+        result = runner.invoke(
+            app,
+            [
+                "check",
+                str(FIXTURES / "excellent_technical.md"),
+                "--platform",
+                "linkedin",
+            ],
+        )
+        assert result.exit_code == 1
+        assert "adaptation" in result.output.lower()
+
+    def test_devto_check_runs(self, workspace: Path) -> None:
+        result = runner.invoke(
+            app,
+            ["check", str(FIXTURES / "excellent_technical.md"), "--platform", "devto"],
+        )
+        assert "DEVTO PRE-PUBLISH CHECK" in result.output.upper()
 
     def test_generic_platform_ok(self, workspace: Path) -> None:
         result = runner.invoke(

@@ -161,12 +161,17 @@ def new(
 @app.command()
 def review(
     article_path: Path = typer.Argument(..., help="Path to the article markdown file."),
-    platform: str = typer.Option(None, "--platform", help="Run the platform check too (medium)."),
+    platform: str = typer.Option(
+        None,
+        "--platform",
+        help="Run the platform check too (medium, devto, hashnode, substack, linkedin).",
+    ),
     output: Path = typer.Option(None, "--output", "-o", help="Write the review to a file."),
 ) -> None:
     """Editorial review of a draft: reasoned scores, issues, publish
     recommendation."""
     from article_craft.parsing import ArticleParseError, parse_article_file
+    from article_craft.platforms.base import available_platforms
     from article_craft.reports import render_review
 
     try:
@@ -174,8 +179,12 @@ def review(
     except ArticleParseError as exc:
         _fail(str(exc))
         return
-    if platform and platform not in ("medium", "generic"):
-        _fail(f"Unknown platform '{platform}'. V1 supports: medium, generic.")
+    if platform and platform != "generic" and platform not in available_platforms():
+        _fail(
+            f"Unknown platform '{platform}'. Supported: "
+            + ", ".join(available_platforms())
+            + ", generic."
+        )
     report = render_review(article, platform=platform)
     _emit(report, output)
     from article_craft.editorial.review import review_article
@@ -189,41 +198,112 @@ def review(
 @app.command()
 def check(
     article_path: Path = typer.Argument(..., help="Path to the article markdown file."),
-    platform: str = typer.Option("medium", "--platform", help="Platform to check (V1: medium)."),
+    platform: str = typer.Option(
+        "medium",
+        "--platform",
+        help="Platform to check: medium, devto, hashnode, substack, linkedin.",
+    ),
     output: Path = typer.Option(None, "--output", "-o", help="Write the check to a file."),
 ) -> None:
-    """Pre-publish check for a platform. V1 implements Medium; generic is a
-    no-op summary."""
+    """Pre-publish check for a platform. V2 implements Medium, DEV.to,
+    Hashnode, Substack, and LinkedIn (adaptation review)."""
     from article_craft.models.review import PlatformCheckStatus
     from article_craft.parsing import ArticleParseError, parse_article_file
-    from article_craft.reports import render_medium_check
+    from article_craft.platforms.base import available_platforms, get_adapter
+    from article_craft.reports import render_platform_check_for
 
-    if platform not in ("medium", "generic"):
-        _fail(
-            f"Unknown platform '{platform}'. V1 supports: medium, generic "
-            "(DEV.to/LinkedIn/Substack are roadmap items)."
-        )
-    try:
-        article = parse_article_file(article_path)
-    except ArticleParseError as exc:
-        _fail(str(exc))
-        return
     if platform == "generic":
         typer.echo(
             "Generic check: no platform-specific rules. Editorial review "
             "covers the platform-agnostic dimensions."
         )
         raise typer.Exit(EXIT_OK)
-    report_text = render_medium_check(article)
+    if platform not in available_platforms():
+        _fail(
+            f"Unknown platform '{platform}'. Supported: "
+            + ", ".join(available_platforms())
+            + ", generic."
+        )
+    try:
+        article = parse_article_file(article_path)
+    except ArticleParseError as exc:
+        _fail(str(exc))
+        return
+    report_text = render_platform_check_for(article, platform)
     _emit(report_text, output)
-    from article_craft.platforms.medium import medium_pre_publish_check
-
-    report = medium_pre_publish_check(article)
-    if report.overall is PlatformCheckStatus.ERROR:
-        raise typer.Exit(EXIT_FINDINGS)
-    if report.overall is PlatformCheckStatus.WARNING:
+    adapter_cls = get_adapter(platform)
+    assert adapter_cls is not None
+    report = adapter_cls().full_report(article)
+    if report.overall in (PlatformCheckStatus.ERROR, PlatformCheckStatus.WARNING):
         raise typer.Exit(EXIT_FINDINGS)
     raise typer.Exit(EXIT_OK)
+
+
+@app.command()
+def export(
+    article_path: Path = typer.Argument(..., help="Path to the article markdown file."),
+    platform: str = typer.Option(
+        ..., "--platform", help="Target platform: devto, hashnode, substack, linkedin."
+    ),
+    out_dir: Path = typer.Option(
+        Path("exports"), "--out", "-d", help="Directory to write the export into."
+    ),
+) -> None:
+    """Export prep: write a platform-ready file locally. Zero network calls,
+    no publishing — you paste/upload the result yourself."""
+    from article_craft.exporter import export_for_platform, render_export_report
+    from article_craft.parsing import ArticleParseError, parse_article_file
+
+    try:
+        article = parse_article_file(article_path)
+    except ArticleParseError as exc:
+        _fail(str(exc))
+        return
+    try:
+        result = export_for_platform(article, platform, out_dir)
+    except ValueError as exc:
+        _fail(str(exc))
+        return
+    typer.echo(render_export_report(result))
+    raise typer.Exit(EXIT_FINDINGS if result.warnings else EXIT_OK)
+
+
+@app.command()
+def adapt(
+    article_path: Path = typer.Argument(..., help="Path to the article markdown file."),
+    platform: str = typer.Option(
+        "linkedin", "--platform", help="Social target: linkedin (or generic)."
+    ),
+    output: Path = typer.Option(None, "--output", "-o", help="Write the post to a file."),
+) -> None:
+    """Derive an attributed social post from the canonical article.
+    The article stays primary; nothing is published automatically."""
+    from article_craft.editorial.adaptation import adapt_for_social, render_social_post
+    from article_craft.models.review import PlatformCheckStatus
+    from article_craft.parsing import ArticleParseError, parse_article_file
+    from article_craft.platforms.linkedin import LinkedInAdapter
+
+    if platform not in ("linkedin", "generic"):
+        _fail("Unknown social platform. Supported: linkedin, generic.")
+    try:
+        article = parse_article_file(article_path)
+    except ArticleParseError as exc:
+        _fail(str(exc))
+        return
+    post = adapt_for_social(article, platform=platform)
+    checks: list[str] = []
+    if platform == "linkedin":
+        report = LinkedInAdapter().full_report(article, post=post)
+        checks = [
+            f"{c.category}: {c.status.value} — {c.detail}"
+            for c in report.checks
+            if c.category in {"Post Length", "Attribution", "Engagement Bait", "Hashtags"}
+        ]
+        has_error = any(c.status is PlatformCheckStatus.ERROR for c in report.checks)
+    else:
+        has_error = post.over_limit
+    _emit(render_social_post(post, checks), output)
+    raise typer.Exit(EXIT_FINDINGS if has_error else EXIT_OK)
 
 
 @app.command()

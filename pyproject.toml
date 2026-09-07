@@ -1,6 +1,6 @@
 [project]
 name = "article-craft"
-version = "1.0.0"
+version = "2.0.0"
 description = "An AI editorial workflow for writing better articles. Helps writers research, structure, review, fact-check, improve, and prepare articles for publishing."
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -34,9 +34,13 @@ dev = [
     "mypy>=1.10",
     "types-PyYAML",
 ]
+mcp = [
+    "mcp>=1.2",
+]
 
 [project.scripts]
 article-craft = "article_craft.cli.main:app"
+article-craft-mcp = "article_craft.mcp.server:main"
 
 [project.urls]
 Homepage = "https://github.com/article-craft/article-craft"

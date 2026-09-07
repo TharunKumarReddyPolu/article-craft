@@ -10,13 +10,15 @@ from __future__ import annotations
 from article_craft.editorial.review import review_article
 from article_craft.models.article import Article
 from article_craft.models.review import (
+    Dimension,
+    PlatformCheck,
     PlatformCheckReport,
     PlatformCheckStatus,
     ReviewResult,
+    RuleClass,
     Severity,
 )
-from article_craft.platforms.base import get_adapter
-from article_craft.platforms.medium import MediumAdapter
+from article_craft.platforms.base import available_platforms, get_adapter
 
 SEVERITY_ORDER = {Severity.CRITICAL: 0, Severity.MAJOR: 1, Severity.MINOR: 2, Severity.INFO: 3}
 STATUS_EMOJI = {
@@ -29,21 +31,68 @@ STATUS_EMOJI = {
 
 DISCLAIMER = (
     "These checks are based on current published guidance and editorial "
-    "heuristics. They do not guarantee Medium distribution."
+    "heuristics. They do not guarantee distribution on any platform."
 )
+
+
+def images_platform_check(article: Article) -> PlatformCheck:
+    """The deterministic image/alt-text findings as one platform check."""
+    from article_craft.editorial.images import check_all
+    from article_craft.models.review import PlatformCheckStatus
+
+    findings = check_all(article)
+    majors = [f for f in findings if f.severity.value in ("major", "critical")]
+    minors = [f for f in findings if f.severity.value == "minor"]
+    if not article.images:
+        status = PlatformCheckStatus.NOT_APPLICABLE
+    elif majors or minors:
+        status = PlatformCheckStatus.WARNING
+    else:
+        status = PlatformCheckStatus.PASS
+    if not article.images:
+        detail = "No images in the article."
+    elif majors:
+        detail = (
+            f"{len(majors)} significant image issue(s): alt text missing, "
+            "filename-like, or too vague to be useful."
+        )
+    elif minors:
+        detail = f"{len(minors)} minor image issue(s) (vague alt, captions, screenshots)."
+    else:
+        detail = "All images have usable, descriptive alt text."
+    return PlatformCheck(
+        category="Images",
+        status=status,
+        detail=detail,
+        rule_class=RuleClass.BEST_PRACTICE,
+        findings=[f"line {f.line}: {f.message}" for f in findings[:8]],
+    )
+
+
+def render_platform_check_for(article: Article, platform: str) -> str:
+    """Pre-publish check for any registered platform adapter."""
+    adapter_cls = get_adapter(platform)
+    if adapter_cls is None:
+        raise ValueError(
+            f"No adapter registered for '{platform}'. Available: "
+            + ", ".join(available_platforms())
+        )
+    adapter = adapter_cls()
+    extra = [images_platform_check(article)] if platform == "medium" else None
+    report = adapter.full_report(article, extra_checks=extra)
+    return "\n".join(render_platform_check(report))
 
 
 def render_review(article: Article, platform: str | None = None) -> str:
     """Full Editorial Review (spec §16 format)."""
     result = review_article(article)
     platform_report: PlatformCheckReport | None = None
-    if platform == "medium":
-        platform_report = MediumAdapter().full_report(article)
-    elif platform is not None and get_adapter(platform) is not None:
+    if platform is not None and get_adapter(platform) is not None:
         adapter_cls = get_adapter(platform)
         assert adapter_cls is not None
         adapter = adapter_cls()
-        platform_report = adapter.full_report(article)
+        extra = [images_platform_check(article)] if platform == "medium" else None
+        platform_report = adapter.full_report(article, extra_checks=extra)
     result.platform_report = platform_report
 
     lines: list[str] = [
@@ -104,10 +153,12 @@ def render_review(article: Article, platform: str | None = None) -> str:
     if platform_report is not None:
         lines += render_platform_check(platform_report)
     else:
-        lines.append("# Medium Check")
+        lines.append("# Platform Check")
         lines.append("")
+        lines += _render_images_section(article)
         lines.append(
-            "_Not run. Re-run with `--platform medium` for the Medium-specific pre-publish check._"
+            "_No platform check run. Re-run with `--platform medium|devto|hashnode|"
+            "substack|linkedin` for the platform-specific pre-publish check._"
         )
         lines.append("")
 
@@ -131,12 +182,17 @@ def render_review(article: Article, platform: str | None = None) -> str:
 def _platform_points(result: ReviewResult) -> str:
     if result.platform_report is None:
         return "n/a"
-    dim = result.score.dimension(
-        __import__(
-            "article_craft.models.review", fromlist=["Dimension"]
-        ).Dimension.PLATFORM_COMPATIBILITY
-    )
+    dim = result.score.dimension(Dimension.PLATFORM_COMPATIBILITY)
     return f"{dim.score}/{dim.max}"
+
+
+def _render_images_section(article: Article) -> list[str]:
+    check = images_platform_check(article)
+    lines = [f"## Images — **{STATUS_EMOJI[check.status]}**", "", check.detail, ""]
+    lines += [f"- {f}" for f in check.findings]
+    if check.findings:
+        lines.append("")
+    return lines
 
 
 def render_platform_check(report: PlatformCheckReport) -> list[str]:
@@ -169,7 +225,10 @@ def render_platform_check(report: PlatformCheckReport) -> list[str]:
 
 
 def render_medium_check(article: Article) -> str:
-    report = MediumAdapter().full_report(article)
+    adapter_cls = get_adapter("medium")
+    if adapter_cls is None:  # pragma: no cover - medium is always registered
+        raise RuntimeError("Medium adapter not registered")
+    report = adapter_cls().full_report(article)
     return "\n".join(render_platform_check(report))
 
 

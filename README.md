@@ -53,17 +53,21 @@ Article Craft is built for developers, engineers, students, and new writers who 
 - research properly and cite sources
 - avoid plagiarism while using sources honestly
 - maintain a consistent voice
-- prepare an article for Medium
+- prepare an article for Medium, DEV.to, Hashnode, Substack, or LinkedIn
 
 Each editorial workflow is presented in a step-by-step method covering:
 
 - 🧑‍⚖️ **Reasoned review** — an 8-dimension editorial score where every deduction carries a written reason
 - 🔎 **Fact-check scaffold** — every claim classified (VERIFIED / LIKELY / UNVERIFIED / CONTRADICTED / OPINION / ASSUMPTION)
 - 🛡️ **Originality guard** — mosaic-plagiarism risk, structural mirroring, and unattributed reuse flagged with concrete fixes
-- 🏷️ **Medium pre-publish check** — policy-grounded PASS/WARNING/ERROR categories with source receipts
+- 🏷️ **Platform pre-publish checks** — Medium, DEV.to, Hashnode, Substack, and LinkedIn, each grounded in that platform's official published policy with source receipts
 - 🎭 **Voice profiles** — an advisory style profile learned from *your own* past articles
 - 📐 **10 article types** — tutorials, explainers, system design, case studies, and more, each with structure and failure modes
-- 🔌 **Platform adapters** — a production-quality Medium adapter behind a small platform interface
+- 🖼️ **Image & alt-text checks** — accessibility-aware review of every image reference in your draft
+- ⚖️ **Contradiction tracking** — flags when your research sources disagree, resolved by source authority
+- 🔁 **Social adaptation** — turn an article into an attributed LinkedIn/generic post where every claim traces back to the article
+- 📤 **Export prep** — platform-ready files written locally for all five platforms; you still press publish
+- 🖥️ **MCP server** — exposes the deterministic engines as tools for any MCP-capable agent (`article-craft[mcp]`)
 - 🏠 **Local-first** — no database, no telemetry, no hosted backend; your articles never leave your machine
 
 ## ✨ Key Features
@@ -73,9 +77,14 @@ Each editorial workflow is presented in a step-by-step method covering:
 | 🧑‍⚖️ Editorial Review | 8-dimension Editorial Quality Score (Reader Value, Originality, Clarity, Structure, Technical Accuracy, Evidence, Voice, Platform) — every deduction explained |
 | 🔎 Fact-Check Workflow | Claims extracted and classified; external verification happens through *your* agent's web access under your direction |
 | 🛡️ Originality Guard | Flags close paraphrasing and structural mirroring; demands independent structure instead of "rewrites that don't look copied" |
-| 🏷️ Medium Check | Pre-publish check grounded in official Medium Help Center policy, with each rule traced to a URL and verification date |
+| 🏷️ 5 Platform Checks | Pre-publish checks for **Medium, DEV.to, Hashnode, Substack, and LinkedIn**, each grounded in that platform's official documentation, every rule traced to a URL and verification date |
 | 🎭 Voice Profiles | `article-craft learn ./my-articles/` builds an advisory profile of tone, sentence length, formatting, and habits from your own writing |
 | 📐 Article Types | 10 types (tutorial, explainer, system design, case study, personal experience, opinion, beginner guide, listicle…) with templates and failure modes |
+| 🖼️ Image & Alt-Text | Detects missing, weak, or placeholder alt text and cover-image problems before your readers do |
+| ⚖️ Contradiction Tracking | When research sources disagree, the conflict is surfaced and resolved by source authority — not silently averaged |
+| 🔁 Social Adaptation | `article-craft adapt` derives an attributed LinkedIn/generic post; every factual claim traces to the source article |
+| 📤 Export Prep | `article-craft export --platform …` writes platform-ready files locally — zero network calls, no auto-publishing |
+| 🖥️ MCP Server | `article-craft-mcp` exposes review/check/factcheck/images as MCP tools for any MCP-capable agent |
 | 🤝 Agent Skill Standard | Works across Claude Code, Codex, Cursor, Gemini CLI, and any agent that reads `SKILL.md` — one canonical skill, no per-agent forks |
 | 🏠 Local-First Privacy | No database, no telemetry, no analytics, no SaaS. Publishing stays a manual human act |
 
@@ -126,6 +135,17 @@ uv tool install article-craft
 pip install article-craft
 ```
 
+**The MCP server** (optional) — exposes the deterministic engines as tools for any MCP-capable agent:
+
+```bash
+pip install "article-craft[mcp]"
+
+# Claude Code
+claude mcp add article-craft -- article-craft-mcp
+```
+
+The server runs on stdio, contains no LLM, and makes no network calls — it runs the same engines as the CLI. See [docs/mcp.md](docs/mcp.md).
+
 ## 📖 The Article Workflow
 
 One idea → one canonical article → platform-specific preparation:
@@ -139,8 +159,9 @@ One idea → one canonical article → platform-specific preparation:
 | 5. Review | `article-craft review article.md` | 8-dimension reasoned score, critical issues, publish recommendation |
 | 6. Fact-check | `article-craft factcheck article.md` | Every claim classified: VERIFIED / LIKELY / UNVERIFIED / CONTRADICTED / OPINION / ASSUMPTION |
 | 7. Originality | originality workflow | Mosaic-plagiarism risk, structural mirroring, unattributed reuse flagged with fixes |
-| 8. Medium check | `article-craft check article.md --platform medium` | Policy-grounded pre-publish check with PASS/WARNING/ERROR per category |
-| 9. Publish checklist | `medium` checklist | The final human pass — including the things only you can verify |
+| 8. Platform check | `article-craft check article.md --platform medium\|devto\|hashnode\|substack\|linkedin` | Policy-grounded pre-publish check with PASS/WARNING/ERROR per category |
+| 9. Export & adapt | `article-craft export` / `article-craft adapt` | Platform-ready files written locally; attributed social post derived from the article |
+| 10. Publish checklist | platform checklist | The final human pass — including the things only you can verify |
 
 Then, in your agent: *"Review this draft like my editor"* — the skill activates, runs the deterministic analysis, and adds the judgment layer on top.
 
@@ -180,17 +201,17 @@ Every deduction carries a written reason. The score is called the **Editorial Qu
 
 ## 🧰 What's Inside
 
-**7 workflows** — `new-article`, `outline`, `review`, `improve`, `fact-check`, `originality`, `medium-check` — each a step-by-step editorial method, not a prompt template.
+**10 workflows** — `new-article`, `outline`, `review`, `improve`, `fact-check`, `originality`, `medium-check`, `platform-check`, `research-interview`, `social-adaptation` — each a step-by-step editorial method, not a prompt template.
 
 **10 article types** — technical tutorial, technical explainer, system design, architecture deep dive, case study, personal experience, opinion, beginner guide, advanced guide, listicle — each with purpose, structure, quality checklist, and common failure modes.
 
-**9 Medium policy references** — distribution, AI policy, plagiarism, formatting, titles, images, publishing, canonical links, topics — each sourced from official Medium Help Center pages with URLs and verification dates in [`sources.yaml`](skills/article-craft/references/platforms/medium/sources.yaml). Policies are versioned reference material, not hardcoded logic, because Medium's policies change.
+**4 platform reference sets** — one per adapter — each sourced from that platform's official documentation with URLs and verification dates in per-platform `sources.yaml` files. Policies are versioned reference material, not hardcoded logic, because platform policies change. Where a platform publishes no policy (e.g. Hashnode AI content), the adapter reports NOT CHECKED rather than guessing.
 
-**8 templates, 4 checklists** — one template per article type; editorial, originality, fact-check, and Medium checklists.
+**8 templates, 8 checklists** — one template per article type; editorial, originality, fact-check checklists plus one per implemented platform.
 
 **Editorial Quality Score** — Reader Value 20, Originality 15, Clarity 15, Structure 10, Technical Accuracy 15, Evidence 10, Voice/Human Contribution 10, Platform Compatibility 5. Every deduction requires a written reason.
 
-**Platform abstraction** — a small `PlatformAdapter` protocol with a production-quality `MediumAdapter`. DEV.to, LinkedIn, and Substack adapters are documented stubs (they raise honest `NotImplementedError`s, they don't pretend to work). See [`docs/roadmap.md`](docs/roadmap.md).
+**Platform adapters** — Medium, DEV.to, Hashnode, Substack, and LinkedIn behind a small `PlatformAdapter` protocol. DEV.to/Hashnode/Substack/LinkedIn were added in 2.0; Ghost and others remain on the [`roadmap`](docs/roadmap.md) — the abstraction makes them straightforward, the policy research is the work.
 
 ## 🧭 Philosophy
 
@@ -227,7 +248,9 @@ Local-first, by design:
 | [Research](docs/research.md) | Source hierarchy, fact-checking, citations |
 | [Originality](docs/originality.md) | The originality guard and how to use sources honestly |
 | [Medium](docs/medium.md) | The Medium adapter, policies, and their sources |
-| [Roadmap](docs/roadmap.md) | V2/V3 possibilities (DEV.to, Substack, MCP server…) |
+| [Platforms](docs/platforms.md) | All five adapters: DEV.to, Hashnode, Substack, LinkedIn — and their sources |
+| [MCP server](docs/mcp.md) | Tool setup, tool list, and agent configuration |
+| [Roadmap](docs/roadmap.md) | What shipped in 2.0 and what's next (Ghost, images workflow…) |
 | [Contributing](docs/contributing.md) | How to add adapters, workflows, policy updates |
 
 ## 🚧 Limitations
@@ -235,8 +258,10 @@ Local-first, by design:
 - The deterministic checks are heuristics. They catch common failure modes; they don't replace a human editor, and they don't evaluate deep technical correctness — your agent's judgment layer does that, with the skill's references as its method.
 - Originality analysis is risk-surfacing between documents you supply, not a plagiarism *detector* and not a clearance certificate.
 - The Medium adapter reflects the Help Center pages verified on the dates in `sources.yaml`. Medium changes its policies; re-verify before relying on any single rule. The tool tells you the date each rule was last verified.
-- V1 supports Medium and generic targets only. Other platforms are stubs with roadmap notes.
-- The CLI never fetches web content; fact-check verification requires an agent with web access, or manual verification.
+- Implemented platforms are **Medium, DEV.to, Hashnode, Substack, LinkedIn**. Other platforms (Ghost, personal blogs, newsletters) are roadmap items, not silent stubs.
+- Platform policy checks reflect the official pages verified on the dates in each `sources.yaml`. Platforms change their policies; re-verify before relying on any single rule. The tool tells you the date each rule was last verified.
+- LinkedIn checks review a *post adaptation*, and Substack's adapter cannot verify email rendering — both are stated, not faked.
+- The CLI and MCP server never fetch web content; fact-check verification requires an agent with web access, or manual verification.
 
 ## ⚠️ Troubleshooting
 
@@ -251,11 +276,12 @@ Local-first, by design:
 Contributions are welcome! Please check [CONTRIBUTING.md](CONTRIBUTING.md) for details on:
 
 - 🧩 Adding editorial workflows and article types
-- 🔌 Adding platform adapters (DEV.to, LinkedIn, Substack…)
-- 🏷️ Updating Medium policy references
+- 🔌 Adding platform adapters (Ghost, personal blogs, newsletters…)
+- 🏷️ Updating platform policy references (Medium, DEV.to, Hashnode, Substack, LinkedIn)
+- 🖥️ Extending the MCP server
 - 🧪 Tests, writing references, and CLI features
 
-For **Medium policy changes**, CONTRIBUTING requires the official source URL, the date checked, the affected rule, and a description of the change. Before contributing, please open an issue to discuss your idea so it aligns with the project's goals. See also [docs/contributing.md](docs/contributing.md).
+For **platform policy changes** (any of the five), CONTRIBUTING requires the official source URL, the date checked, the affected rule, and a description of the change. Before contributing, please open an issue to discuss your idea so it aligns with the project's goals. See also [docs/contributing.md](docs/contributing.md).
 
 ## ⭐ Support the Project
 
@@ -269,7 +295,7 @@ If Article Craft helps you write and publish better articles, please consider:
 
 </div>
 
-- 🐛 [Opening issues](https://github.com/TharunKumarReddyPolu/article-craft/issues) for bugs or Medium policy pages that have changed
+- 🐛 [Opening issues](https://github.com/TharunKumarReddyPolu/article-craft/issues) for bugs or platform policy pages that have changed
 - 🔀 Contributing a platform adapter, editorial workflow, or writing reference
 - ✍️ Writing about your experience using it — with attribution, of course
 
@@ -279,7 +305,7 @@ If Article Craft helps you write and publish better articles, please consider:
 
 ## 📄 License
 
-[Apache-2.0](LICENSE). The Medium policy summaries in the skill's references quote from Medium's public Help Center for informational purposes; Medium's own pages remain the authoritative source.
+[Apache-2.0](LICENSE). The platform policy summaries in the skill's references quote from each platform's public documentation for informational purposes; the platforms' own pages remain the authoritative sources.
 
 ---
 

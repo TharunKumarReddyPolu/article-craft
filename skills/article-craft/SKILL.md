@@ -1,10 +1,10 @@
 ---
 name: article-craft
-description: Helps writers research, structure, review, fact-check, improve, and prepare articles for publishing, with a production-quality Medium adapter. Use when the user wants to write a Medium article, blog post, or technical article; asks to review, critique, edit, or improve an article; asks "is this ready to publish?"; wants help outlining, structuring, or titling an article; asks to fact-check a post; wants to check plagiarism or originality risks; or asks about Medium policies, formatting, distribution, or the Partner Program. Do not activate for ordinary coding tasks, bug fixes, code review, or general questions that are not about writing/publishing articles.
+description: Helps writers research, structure, review, fact-check, improve, and prepare articles for publishing, with production adapters for Medium, DEV.to, Hashnode, Substack, and LinkedIn. Use when the user wants to write a Medium article, blog post, DEV post, newsletter, or technical article; asks to review, critique, edit, or improve an article; asks "is this ready to publish?"; wants help outlining, structuring, or titling an article; asks to fact-check a post; wants to check plagiarism or originality risks; wants to adapt an article into a social post; or asks about Medium/DEV/Hashnode/Substack/LinkedIn policies or formatting. Do not activate for ordinary coding tasks, bug fixes, code review, or general questions that are not about writing/publishing articles.
 license: Apache-2.0
-compatibility: Optional CLI acceleration via `pip install article-craft` (or `uv tool install article-craft`); all workflows also work with agent reasoning and file tools alone. Python 3.11+ for the CLI.
+compatibility: Optional CLI acceleration via `pip install article-craft` (or `uv tool install article-craft`); all workflows also work with agent reasoning and file tools alone. Python 3.11+ for the CLI. Optional MCP server via `article-craft[mcp]`.
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   project: article-craft
   philosophy: "Human ideas + human experience + AI-assisted research + AI-assisted editing = better writing. The user remains the author."
 ---
@@ -49,7 +49,9 @@ acting. All paths are relative to this skill's root.
 | Improve without rewriting ("make this clearer") | [workflows/improve.md](workflows/improve.md) |
 | Fact-check claims ("is this accurate?") | [workflows/fact-check.md](workflows/fact-check.md) |
 | Check originality / plagiarism risk | [workflows/originality.md](workflows/originality.md) |
-| Check Medium readiness ("is this ready for Medium?") | [workflows/medium-check.md](workflows/medium-check.md) |
+| Check readiness for any platform ("is this ready for Medium/DEV/...?") | [workflows/platform-check.md](workflows/platform-check.md) |
+| Interview sources / track contradictions across research | [workflows/research-interview.md](workflows/research-interview.md) |
+| Turn an article into a social post ("make a LinkedIn post from this") | [workflows/social-adaptation.md](workflows/social-adaptation.md) |
 
 ## The CLI (optional accelerator)
 
@@ -60,9 +62,11 @@ is never required.
 
 ```bash
 article-craft review article.md        # Editorial Review with reasoned score
-article-craft check article.md --platform medium   # Medium pre-publish check
+article-craft check article.md --platform medium   # pre-publish check (also: devto, hashnode, substack, linkedin)
 article-craft improve article.md --section 3       # targeted improvement plan
 article-craft factcheck article.md     # claim classification scaffold
+article-craft export article.md --platform devto   # platform-ready file, locally only
+article-craft adapt article.md --platform linkedin # attributed social post
 article-craft new                      # guided new-article workflow
 article-craft learn ./my-articles/     # voice profile -> .article-craft/voice.md
 article-craft init                     # one-time project setup
@@ -86,22 +90,26 @@ a written reason.** The score is called the Editorial Quality Score — never a
 - Research method: [references/research/](references/research/) — source
   hierarchy (Tier 1 official → Tier 5 avoid), fact-checking classes
   (VERIFIED/LIKELY/UNVERIFIED/CONTRADICTED/OPINION/ASSUMPTION), citations.
-- Medium policy: [references/platforms/medium/](references/platforms/medium/)
-  — distribution, AI policy, plagiarism, formatting, titles, images,
-  publishing, canonical links, topics. Each file cites its official source and
-  verification date; `sources.yaml` is the source inventory. When Medium
-  policy matters, trust these reference files over memory, and say so.
+- Platform policy: [references/platforms/](references/platforms/) — one
+  directory per platform (`medium/`, `devto/`, `hashnode/`, `substack/`,
+  `linkedin/`), each with an overview and a `sources.yaml` source inventory
+  (URL, authority, verification date). When platform policy matters, trust
+  these reference files over memory, and say so. Where a platform publishes
+  no policy (e.g. Hashnode AI content), say NOT CHECKED rather than guessing.
 - Templates: [templates/](templates/) — one per article type.
 - Checklists: [checklists/](checklists/) — editorial, originality,
-  fact-check, medium.
+  fact-check, and one per platform (medium, devto, hashnode, substack,
+  linkedin).
 
 ## Hard boundaries
 
-- V1 supports **Medium** and **generic** targets only. If asked about DEV.to,
-  LinkedIn, Substack, Ghost, Hashnode, or newsletters: say they are on the
-  roadmap and apply the generic editorial workflows.
-- No publishing automation: never post, schedule, or upload to Medium or
-  anywhere else. Publishing is the author's manual act.
+- Implemented platforms: **Medium, DEV.to, Hashnode, Substack, LinkedIn**
+  (+ generic). If asked about Ghost, newsletters-by-other-tools, or anything
+  else: say it is on the roadmap and apply the generic editorial workflows.
+- LinkedIn checks review a **LinkedIn adaptation** (plain-text post or
+  article draft), never the raw markdown. Always label output accordingly.
+- No publishing automation: never post, schedule, or upload anywhere.
+  Export prep writes files locally only; publishing is the author's manual act.
 - Privacy: user articles and the `.article-craft/` workspace stay local. Never
   transmit them anywhere without the user explicitly asking.
 - If the user's request would require fabricating experience, citations, or

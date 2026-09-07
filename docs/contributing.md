@@ -37,23 +37,27 @@ make check        # lint + typecheck + tests + skill validation
 ## Adding a platform adapter
 
 1. Research the platform's **official** documentation first. Record sources
-   in a `sources.yaml` for that platform (same schema as Medium's).
-2. Implement the `PlatformAdapter` protocol in
-   `src/article_craft/platforms/<platform>/adapter.py`. Use NOT CHECKED /
-   NOT APPLICABLE honestly rather than guessing.
-3. Tag every check POLICY / RECOMMENDATION / HEURISTIC; cite `source_id`s.
-4. Register with `@register_adapter`; add CLI plumbing only if the platform
-   has real checks.
-5. Remove the stub from `platforms/future.py`; update README, roadmap, and
-   the skill's hard-boundaries line.
-6. Tests: one clean fixture, one violating fixture, per category.
+   in a `sources.yaml` for that platform (same schema as Medium's). No
+   reference, no adapter — this ordering is the project's core rule.
+2. Write the reference overview in
+   `skills/article-craft/references/platforms/<platform>/overview.md`.
+3. Implement the `PlatformAdapter` protocol in
+   `src/article_craft/platforms/<platform>/adapter.py` (inherit from the
+   shared base in `platforms/base.py` to get the source-verification
+   guard). Use NOT CHECKED / NOT APPLICABLE honestly rather than guessing.
+4. Tag every check POLICY / RECOMMENDATION / HEURISTIC; cite `source_id`s.
+5. Register with `@register_adapter`; update the CLI's platform dispatch,
+   README, roadmap, and the skill's hard-boundaries line.
+6. Add a platform checklist in `skills/article-craft/checklists/`.
+7. Tests: one clean fixture, one violating fixture, per category.
 
-## Medium policy updates
+## Platform policy updates
 
-Medium's policies change; keeping them current is maintenance, not optional.
-A policy PR must include:
+Platform policies change (Medium's, DEV's, Substack's, LinkedIn's); keeping
+them current is maintenance, not optional. A policy PR must include:
 
-- **Official source URL** (help.medium.com or official blog)
+- **Platform + official source URL** (the platform's official help center
+  or policy page — never a blog post about the policy)
 - **Date checked** (and the page's own last-updated date if shown)
 - **Affected rule(s)** — which reference file(s) and adapter check(s)
 - **Description of the change** — what the policy said, what it now says

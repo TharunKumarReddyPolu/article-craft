@@ -1,0 +1,97 @@
+# Hashnode Reference Sources
+
+# Hashnode's official help center is the Docusaurus site built from the
+# Hashnode/support GitHub repository. URLs below are repo blob links; the
+# rendered site serves the same content. The old docs.hashnode.com and
+# support.hashnode.com domains are gone (410/404 as of 2026-09-07).
+
+sources:
+  - id: hashnode-write-article
+    title: "Write an Article (Hashnode Support)"
+    url: https://github.com/Hashnode/support/blob/main/docs/write-an-article.md
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - editor flow (title field, story editor)
+      - tag selection ("Select tags" section)
+      - cover photo recommended 1200x630 px
+      - optional subtitle
+      - custom OG image 1200x630 px for social sharing
+      - canonical URL via "Are you republishing? -> Add Original Article"
+      - "Hide from Hashnode Community" option
+      - editable slug; backdating
+    notes: >
+      The canonical per-article settings contract. Cover/OG image sizes are
+      quoted from this page.
+
+  - id: hashnode-markdown
+    title: "Markdown Guidelines (Hashnode Support)"
+    url: https://github.com/Hashnode/support/blob/main/docs/markdown-guidelines.md
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - ATX-style headings H1-H6
+      - embed syntax %[URL] via Embed.ly (tweets, YouTube, GitHub repos,
+        CodePen, Glitch, SoundCloud, any web article)
+      - code fences with language tag; generic highlighting otherwise
+      - quotes and inline formatting
+    notes: >
+      Hashnode has NO liquid-tag system; DEV-style {% tag %} syntax is not
+      valid Hashnode markdown. The export prep uses this to warn on
+      cross-platform syntax.
+
+  - id: hashnode-tags
+    title: "Tags (Hashnode Support)"
+    url: https://github.com/Hashnode/support/blob/main/docs/tags.md
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - tags selected from Hashnode's tag list in the editor
+    notes: >
+      Unlike DEV, no documented maximum tag count. The adapter does not
+      invent one.
+
+  - id: hashnode-seo
+    title: "SEO (Hashnode Support)"
+    url: https://github.com/Hashnode/support/blob/main/docs/seo.md
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - blog-level SEO settings (display title, search description, social image)
+      - automatic sitemap at yourblog.tld/sitemap.xml
+      - AMP support toggle
+    notes: >
+      Blog-level settings are separate from per-article settings; the
+      adapter only checks per-article fields.
+
+  - id: hashnode-conduct
+    title: "Community Code of Conduct (Hashnode Support)"
+    url: https://github.com/Hashnode/support/blob/main/docs/community-code-of-conduct.md
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - respectful-behavior baseline; destructive behaviors listed
+      - conflict-resolution mechanism
+    notes: >
+      Enforcement specifics live in report-posts-and-users.md and
+      report-copyright-infringement.md (reporting paths).
+
+  - id: hashnode-github-source
+    title: "Start Using GitHub to Publish Articles on Hashnode (TownHall)"
+    url: https://townhall.hashnode.com/start-using-github-to-publish-articles-on-hashnode
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - "GitHub as Source" publishing: .md files only
+      - front matter contract for GitHub publishing (domain, comma-separated
+        tag slugs, publishAs for team publications)
+      - articles sourced from GitHub are edited via GitHub, not the platform
+    notes: >
+      Official Hashnode blog (TownHall). Documents the markdown front matter
+      contract the export prep targets for repo-based workflows.

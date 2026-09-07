@@ -1,0 +1,79 @@
+# DEV Reference Sources
+
+# Fields per source:
+#   id            stable identifier used in overview.md and adapter code
+#   title         exact title of the official page
+#   url           canonical URL
+#   authority     OFFICIAL for all entries (dev.to property)
+#   date_updated  last-updated date stated on the page, if any
+#   last_verified date Article Craft's researchers confirmed this content
+#   covers        which rules this source supports
+#   notes         anything a future verifier needs to know
+
+sources:
+  - id: dev-editor-guide
+    title: "Editor Guide - DEV Community"
+    url: https://dev.to/p/editor_guide
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - front matter fields (title, published, tags max 4, canonical_url, cover_image 1000x420, series)
+      - markdown basics and captions (figcaption)
+      - image alt text accessibility guidance
+      - avoid level-1 headings in content (title is h1)
+      - liquid tags and embeds ({% embed %}, {% link %}, {% card %}, {% cta %}, {% details %}, {% katex %})
+      - GIF limit 200 megapixels per frame/page
+    notes: >
+      The canonical front matter contract. The tags "max of four" and the
+      cover image 1000x420 recommendation are quoted verbatim from this page.
+
+  - id: dev-help-writing
+    title: "Writing, Editing and Scheduling - DEV Help"
+    url: https://dev.to/help/writing-editing-scheduling
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - publishing flow (published: false -> true)
+      - canonical URL purpose ("prevents any penalties for reposting")
+      - cross-posting explicitly encouraged (RSS import, canonical links)
+      - profanity not promoted in titles
+      - authors own their content
+      - Code of Conduct moderation
+    notes: >
+      Links out to the AI guidelines and plagiarism guidelines resources
+      listed below.
+
+  - id: dev-ai-guidelines
+    title: "Guidelines for AI-assisted Articles on DEV"
+    url: https://dev.to/guidelines-for-ai-assisted-articles-on-dev
+    authority: OFFICIAL
+    date_updated: 2024-04-08
+    last_verified: 2026-09-07
+    covers:
+      - AI-assisted articles allowed WITH disclosure (#ABotWroteThis or in-copy)
+      - fact-check AI-assisted articles before publishing
+      - no promotion of businesses/courses in AI articles
+      - no deceiving readers; no clout-building purpose
+      - do not publish educational content the human author does not understand
+      - AI-generated comments prohibited (exceptions: translation/grammar/AT)
+      - backlink-building articles suspendable (exceptions: personal blog, company org)
+    notes: >
+      DEV may add #abotwrotethis to posts that refuse to disclose. Article
+      Craft surfaces this policy; it never helps evade disclosure.
+
+  - id: dev-plagiarism
+    title: "Guidelines for Avoiding Plagiarism on DEV"
+    url: https://dev.to/how-to-avoid-plagiarism
+    authority: OFFICIAL
+    date_updated: 2023-07-19
+    last_verified: 2026-09-07
+    covers:
+      - four plagiarism types (direct, self, mosaic, accidental)
+      - cite anything not created by you; quote + cite verbatim
+      - paraphrase deserves citation; "in doubt, always provide a source + citation"
+      - attribution applies to images, code, videos, other media
+      - AI does not excuse plagiarized posts; unpublish + possible suspension
+    notes: >
+      Maps directly onto Article Craft's originality guard dimensions.

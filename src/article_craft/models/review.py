@@ -120,7 +120,7 @@ class PlatformCheckReport(BaseModel):
     fix_before_publishing: list[str] = Field(default_factory=list)
     disclaimer: str = (
         "These checks are based on current published guidance and editorial "
-        "heuristics. They do not guarantee Medium distribution."
+        "heuristics. They do not guarantee distribution on any platform."
     )
 
     @property

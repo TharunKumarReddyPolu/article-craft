@@ -5,10 +5,10 @@
 **One idea → one canonical article model → platform-specific adaptation.**
 
 The editorial core knows about articles, authors, audiences, sections,
-sources, claims, reviews, and voice. It knows nothing about Medium. Platform
-adapters know nothing about each other. This is what makes DEV.to/LinkedIn/
-Substack adapters straightforward later: they transform the same canonical
-model and add their own policy references.
+sources, claims, reviews, and voice. It knows nothing about any platform.
+Platform adapters know nothing about each other. This is what made the
+DEV.to/Hashnode/Substack/LinkedIn adapters (V2) straightforward: each
+transforms the same canonical model and adds its own policy references.
 
 ```
                 Article Craft
@@ -17,10 +17,10 @@ model and add their own policy references.
          |                       |
    Editorial Core          Platform Adapters
          |                       |
-   +-----+-----+          +------+------+
-   |     |     |          |      |      |
-Research Voice Review   Medium  DEV*  LinkedIn*
-   |     |     |                   (* stubs in V1)
+   +-----+-----+          +------+------+------+------+
+   |     |     |          |      |         |         |  |
+Research Voice Review   Medium  DEV.to  Hashnode Substack LinkedIn
+   |     |     |
    +-----+-----+
          |
     Article Model
@@ -46,21 +46,31 @@ Research Voice Review   Medium  DEV*  LinkedIn*
   PASS/WARNING/ERROR/NOT CHECKED/NOT APPLICABLE, rule class, source id.
 - **`WritingProfile`** — voice layer: statistical signals from the author's
   own corpus.
+- **`SocialPost`** (V2) — an attributed social adaptation derived *from* an
+  Article; carries `source_article_id` and a claim-traceability invariant.
+- **`PlatformExport`** (V2) — a locally-written platform-ready artifact:
+  file path, platform id, warnings. Never a publish action.
 
 ## The engines
 
 - **`editorial/`** — article-type registry (10 types with structures and
   failure modes), outline builder, review engine, title system (analysis +
   candidate generation), AI-pattern detection, manipulation-pattern
-  detection, human-contribution detection.
+  detection, human-contribution detection, image & alt-text checks (V2),
+  social adaptation (V2).
 - **`research/`** — claim extraction (deterministic candidates + hints),
-  fact-check scaffolding, `research.md` artifact rendering.
+  fact-check scaffolding, `research.md` artifact rendering, contradiction
+  detection with authority-based resolution (V2).
 - **`originality/`** — similarity-risk heuristics vs. a supplied source:
   sentence overlap (shingle Jaccard), structural mirroring (LCS on section
   titles), distinctive-example reuse, unattributed quotes.
 - **`voice/`** — writing-profile extraction → `voice.md`.
 - **`scoring/`** — the rubric: deductions are impossible without reasons
   (`deduct()` raises on an empty reason).
+- **`exporter.py`** (V2) — renders platform-ready files to disk for all five
+  platforms; zero network calls.
+- **`mcp/`** (V2, optional extra) — a FastMCP stdio server exposing the
+  deterministic engines as MCP tools. No LLM, no network.
 
 ## The deterministic-vs-LLM split
 
@@ -91,25 +101,41 @@ class PlatformAdapter(Protocol):
     def platform_compatibility_score(self, article) -> DimensionScore: ...
 ```
 
-`MediumAdapter` implements it fully. Every check is tagged `POLICY`
+`MediumAdapter` implements it fully; the V2 adapters (DEV.to, Hashnode,
+Substack, LinkedIn) share the same base. Every check is tagged `POLICY`
 (official platform policy), `RECOMMENDATION` (official-sourced advice), or
 `HEURISTIC` (Article Craft's editorial judgment), and policy checks cite
-their `source_id` from the Medium `sources.yaml` — the adapter raises if a
-check cites a source id that doesn't exist there. That's the honesty guard:
-code can't drift from documented sources silently.
+their `source_id` from the platform's `sources.yaml` — the shared base
+raises if a check cites a source id that doesn't exist there. That's the
+honesty guard: code can't drift from documented sources silently.
 
-Future adapters (`platforms/future.py`) raise `NotImplementedError` with a
-roadmap pointer. They are registered nowhere; `check --platform devto`
-fails with an honest usage error.
+Two adapters have documented scope limits that are stated in output rather
+than papered over: the LinkedIn adapter reviews *adaptations* (posts), not
+raw markdown articles; and Substack's adapter cannot verify email rendering.
+
+## Adaptation and export (V2)
+
+Two derived artifacts keep the canonical article primary:
+
+- **`article-craft adapt`** (`editorial/adaptation.py`) builds a
+  `SocialPost` from the article: an attributed hook, the article's key
+  points, and the link. Post text respects LinkedIn's documented 3,000-
+  character limit; every factual statement must trace to the article —
+  the engine refuses to add claims. Nothing is published.
+- **`article-craft export`** (`exporter.py`) writes platform-ready files:
+  frontmatter-composed markdown for DEV.to/Hashnode/Medium, and post text
+  for LinkedIn/Substack. Files land locally; publishing remains manual.
 
 ## Policy as versioned data
 
-Medium's rules live in `skills/article-craft/references/platforms/medium/`
-as markdown summaries with per-source metadata (URL, authority, dates
-verified) in `sources.yaml`. The adapter encodes *checks against those
-summaries*, not folklore. When Medium changes a page, you update the
-reference file, bump `last_verified`, and adjust the check — the change is
-reviewable in git.
+Each platform's rules live in
+`skills/article-craft/references/platforms/<platform>/` as markdown
+summaries with per-source metadata (URL, authority, dates verified) in
+`sources.yaml`. The adapters encode *checks against those summaries*, not
+folklore. When a platform changes a page, you update the reference file,
+bump `last_verified`, and adjust the check — the change is reviewable in
+git. Where a platform publishes no relevant policy, its adapter emits
+`NOT CHECKED` with that explanation rather than guessing.
 
 ## The skill ↔ CLI relationship
 

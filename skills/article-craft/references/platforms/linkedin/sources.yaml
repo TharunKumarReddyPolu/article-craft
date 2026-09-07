@@ -1,0 +1,93 @@
+# LinkedIn Reference Sources
+
+sources:
+  - id: linkedin-articles
+    title: "Write and publish articles on LinkedIn | LinkedIn Help"
+    url: https://www.linkedin.com/help/linkedin/answer/a522427
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - article publishing tool (desktop only; not on mobile app)
+      - cover image/video above title; title field separate from body
+      - toolbar: images/video, links, code snippets, embeds, lists,
+        blockquotes, dividers, bold/italic
+      - SEO settings: article URL, SEO title, SEO description
+      - publish as self or Page; as article or newsletter edition
+      - draft sharing; comment disabling; @mentions
+    notes: >
+      The mechanical contract for the article shape of the adaptation
+      artifact.
+
+  - id: linkedin-posting
+    title: "Get started with posting on LinkedIn | LinkedIn Help"
+    url: https://www.linkedin.com/help/linkedin/answer/a518996
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - posts vs articles distinction (share box vs "Write article")
+      - post types (text, photo, video, poll, document)
+      - posts must align with User Agreement and Professional Community
+        Policies
+    notes: >
+      Documents the post shape (plain text, no markdown) that motivates the
+      adaptation-artifact model.
+
+  - id: linkedin-article-tips
+    title: "Tips for writing articles on LinkedIn | LinkedIn Help"
+    url: https://www.linkedin.com/help/linkedin/answer/a516913
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - "write about specific areas in which you have experience and/or
+        expertise"
+      - "keep your writing focused. Avoid covering too many topics"
+      - opinion allowed, kept professional (no obscene/shocking/hateful)
+      - "no limits on word count, but the articles that are best received
+        are more than three paragraphs"
+      - media recommended to showcase concrete examples
+    notes: >
+      Maps directly onto the author-contribution and focus dimensions.
+
+  - id: linkedin-ai-best-practices
+    title: "Best practices for content created with the help of AI | LinkedIn Help"
+    url: https://www.linkedin.com/help/linkedin/answer/a1481496
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - content should reflect the member's own voice, perspective, experience
+      - official "AI slop" definition (low-effort, generic, no point of view)
+      - AI-assisted welcome when it reflects a real person's perspective;
+        generic content "less likely to be widely distributed"
+      - LinkedIn urges review/edit/approval of AI-assisted content
+      - disclosure recommended when relying heavily on AI
+      - "Seems like AI slop" community feedback -> Post analytics tip
+    notes: >
+      The primary policy source for the LinkedIn adapter's AI checks. Quote
+      the slop definition verbatim in adapter output.
+
+  - id: linkedin-post-limits
+    title: "Post and share updates | LinkedIn Help"
+    url: https://www.linkedin.com/help/linkedin/answer/a528176
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - "The character limit for a post is 3,000 characters"
+    notes: >
+      Drives the SocialPost over_limit check (POLICY-grade mechanical limit).
+
+  - id: linkedin-pcp
+    title: "LinkedIn Professional Community Policies"
+    url: https://www.linkedin.com/legal/professional-community-policies
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: 2026-09-07
+    covers:
+      - baseline content contract (safe, trustworthy, professional)
+      - IP/privacy respect requirements
+    notes: >
+      Cited by the posting and articles help pages as the governing policy.
