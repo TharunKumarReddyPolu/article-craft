@@ -6,6 +6,18 @@ specification](https://agentskills.io/specification) (verified 2026-09-06).
 Agents with native skills support load it automatically; any agent that can
 read markdown can follow it manually.
 
+## One-command install (recommended)
+
+The open [skills CLI](https://github.com/vercel-labs/skills) detects which
+agents you have and installs the skill into all of them:
+
+```bash
+npx skills add TharunKumarReddyPolu/article-craft
+```
+
+Add `-g` for a user-wide install, or `--agent claude-code` to target one
+agent. Under the hood it places the skill where each agent expects it.
+
 ## What the skill contains
 
 - `SKILL.md` — frontmatter (`name`, `description`, `license`, `compatibility`,

@@ -1,12 +1,30 @@
 [project]
 name = "article-craft"
-version = "2.0.0"
+version = "2.1.0"
 description = "An AI editorial workflow for writing better articles. Helps writers research, structure, review, fact-check, improve, and prepare articles for publishing."
 readme = "README.md"
 license = { text = "Apache-2.0" }
 authors = [{ name = "Article Craft contributors" }]
 requires-python = ">=3.11"
-keywords = ["writing", "editorial", "medium", "agent-skills", "ai", "technical-writing"]
+keywords = [
+    "writing",
+    "editorial",
+    "medium",
+    "agent-skills",
+    "ai",
+    "technical-writing",
+    "blogging",
+    "devto",
+    "hashnode",
+    "substack",
+    "linkedin",
+    "fact-checking",
+    "plagiarism",
+    "writing-tools",
+    "claude-code",
+    "mcp",
+    "mcp-server",
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -43,10 +61,10 @@ article-craft = "article_craft.cli.main:app"
 article-craft-mcp = "article_craft.mcp.server:main"
 
 [project.urls]
-Homepage = "https://github.com/article-craft/article-craft"
-Documentation = "https://github.com/article-craft/article-craft/tree/main/docs"
-Issues = "https://github.com/article-craft/article-craft/issues"
-Changelog = "https://github.com/article-craft/article-craft/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/TharunKumarReddyPolu/article-craft"
+Documentation = "https://github.com/TharunKumarReddyPolu/article-craft/tree/main/docs"
+Issues = "https://github.com/TharunKumarReddyPolu/article-craft/issues"
+Changelog = "https://github.com/TharunKumarReddyPolu/article-craft/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["hatchling"]

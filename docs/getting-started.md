@@ -2,15 +2,28 @@
 
 From zero to a reviewed article in about 15 minutes.
 
+## 0. Prove it works (30 seconds)
+
+```bash
+uvx --from "git+https://github.com/TharunKumarReddyPolu/article-craft" article-craft demo
+```
+
+This runs the real review → fact-check → platform-check pipeline on a small
+built-in article. Nothing to configure; if this works, your environment is fine.
+
 ## 1. Install the CLI (optional but recommended)
 
 ```bash
+# straight from the repo — always current
+uv tool install "git+https://github.com/TharunKumarReddyPolu/article-craft"
+
+# or from PyPI, once published
 uv tool install article-craft
-# or: pip install article-craft
 ```
 
-Requires Python 3.11+. The CLI is an accelerator — every workflow also works
-with agent reasoning alone.
+Requires Python 3.11+ (`uv tool install` manages its own Python). The CLI is
+an accelerator — every workflow also works with agent reasoning alone. If
+anything misbehaves, `article-craft doctor` diagnoses it.
 
 ## 2. Install the skill in your agent
 

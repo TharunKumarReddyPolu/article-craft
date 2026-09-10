@@ -14,6 +14,11 @@ uv sync --extra dev
 make check   # lint + typecheck + tests + skill validation
 ```
 
+Please open an issue before large changes — use the **platform policy update**
+template when a platform's published rules changed (it asks for exactly what
+the project requires: source URL, verification date, and the rule diff), or
+start a Discussion for feature ideas.
+
 PRs should:
 
 - Pass `make check` (ruff, mypy, pytest, skill validation).

@@ -1,0 +1,42 @@
+name: Platform policy update
+description: A platform's published policy changed (Medium, DEV.to, Hashnode, Substack, LinkedIn).
+labels: ["policy-update"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Policy accuracy is the core promise of the platform adapters. Thank you for
+        helping keep the references current.
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Medium
+        - DEV.to
+        - Hashnode
+        - Substack
+        - LinkedIn
+    validations:
+      required: true
+  - type: input
+    id: source-url
+    attributes:
+      label: Official source URL
+      description: The platform's official page documenting the current rule.
+      placeholder: https://help.medium.com/…
+    validations:
+      required: true
+  - type: input
+    id: date-checked
+    attributes:
+      label: Date you verified the page
+    validations:
+      required: true
+  - type: textarea
+    id: rule
+    attributes:
+      label: Which rule changed, and how?
+      description: Quote the relevant current wording and say what our reference currently claims.
+    validations:
+      required: true

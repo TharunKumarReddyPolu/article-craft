@@ -12,11 +12,12 @@ concurrency:
 
 jobs:
   test:
-    name: Tests (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    name: Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +32,12 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
+
+      # The friction contract: a fresh user's first command must succeed.
+      - name: Smoke-test demo and doctor
+        run: |
+          uv run article-craft demo
+          uv run article-craft doctor
 
   lint:
     name: Lint & format (ruff)

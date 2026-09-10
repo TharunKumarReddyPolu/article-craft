@@ -90,8 +90,18 @@ Each editorial workflow is presented in a step-by-step method covering:
 
 ## ⚡ Quick Start
 
-1. Install the CLI: `uv tool install article-craft` (or `pip install article-craft`)
-2. Install the skill in your agent: copy `skills/article-craft/` into your agent's skills directory (see [Installation](#-installation))
+**Prove it works in 30 seconds — no setup, no config:**
+
+```bash
+uvx --from "git+https://github.com/TharunKumarReddyPolu/article-craft" article-craft demo
+```
+
+You'll see the real editorial pipeline — review, fact-check, and a platform check — run on a built-in article. Nothing is installed permanently; nothing leaves your machine.
+
+**The full loop:**
+
+1. Install the skill in your agent: `npx skills add TharunKumarReddyPolu/article-craft` — it auto-detects Claude Code, Cursor, Codex, and more (or copy manually, see [Installation](#-installation))
+2. Install the CLI: `uv tool install "git+https://github.com/TharunKumarReddyPolu/article-craft"` (or from PyPI when available)
 3. Create your editorial workspace: `article-craft init`
 4. Start an article from an idea: `article-craft new --idea "..."` — you get a brief, not a ghostwritten draft
 5. **Draft the article yourself** — your experience and voice are the point
@@ -99,6 +109,8 @@ Each editorial workflow is presented in a step-by-step method covering:
 7. Verify claims: `article-craft factcheck my-article.md`
 8. Pre-publish check: `article-craft check my-article.md --platform medium`
 9. Work through the publish checklist, fix what it finds, and publish manually
+
+> Something behaving oddly? `article-craft doctor` diagnoses your environment (PATH, encoding, versions) and prints exact fixes.
 
 ## 📦 Installation
 
@@ -128,12 +140,15 @@ Or manually: copy `skills/article-craft/` into your project's `.claude/skills/` 
 **The CLI** (optional, works alongside any agent):
 
 ```bash
-# with uv (recommended)
-uv tool install article-craft
+# install straight from this repo — always current, no PyPI needed
+uv tool install "git+https://github.com/TharunKumarReddyPolu/article-craft"
 
-# or with pip
+# or, once published to PyPI:
+uv tool install article-craft
 pip install article-craft
 ```
+
+Not sure whether your install is healthy? `article-craft doctor` checks Python, PATH, workspace, and optional extras — and prints fixes.
 
 **The MCP server** (optional) — exposes the deterministic engines as tools for any MCP-capable agent:
 
@@ -265,7 +280,8 @@ Local-first, by design:
 
 ## ⚠️ Troubleshooting
 
-- **`python` opens the Microsoft Store** (Windows): your PATH has the Store alias, not a real Python. Install Python 3.11+ from [python.org](https://www.python.org/downloads/) or use `uv tool install article-craft`, which manages its own Python.
+- **Start here**: run `article-craft doctor` — it checks your Python version, PATH resolution, workspace state, and optional extras, and prints an exact fix for anything it finds.
+- **`python` opens the Microsoft Store** (Windows): your PATH has the Store alias, not a real Python. Install Python 3.11+ from [python.org](https://www.python.org/downloads/) or use `uv tool install`, which manages its own Python.
 - **`article-craft: command not found` after pip install**: your Python `Scripts`/`bin` directory isn't on PATH. Use `python -m article_craft.cli.main` as a fallback, or install with `uv tool install` which handles PATH.
 - **Antivirus flags uv**: some AV engines flag unsigned Rust binaries (uv is Astral's, used by major projects). Verify the checksum from the [uv releases page](https://github.com/astral-sh/uv/releases) before whitelisting.
 - **`Could not parse article.md because the file is not valid UTF-8`**: re-save the file as UTF-8 (in VS Code: bottom-right encoding → "Save with encoding → UTF-8").

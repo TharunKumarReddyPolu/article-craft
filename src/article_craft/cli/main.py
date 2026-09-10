@@ -1,6 +1,7 @@
 """Article Craft CLI.
 
-Commands: init, new, review, check, improve, factcheck, learn, version.
+Commands: demo, doctor, init, new, review, check, improve, factcheck, learn,
+export, adapt, version.
 
 Exit codes (spec §37): 0 = pass, 1 = findings (warnings/errors depending on
 command), 2 = invalid usage.
@@ -27,6 +28,26 @@ EXIT_FINDINGS = 1
 EXIT_USAGE = 2
 
 
+def _make_console_safe() -> None:
+    """Keep output alive on consoles that cannot encode every glyph we print.
+
+    Default Windows consoles often use cp1252, which has no mapping for the
+    ✅/⚠️/❌ icons the reports use — without this guard, ``article-craft
+    check`` would crash with UnicodeEncodeError on a first run. Unencodable
+    characters are replaced instead of fatal.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            encoding = (getattr(stream, "encoding", None) or "").lower().replace("-", "")
+            if encoding and encoding != "utf8":
+                stream.reconfigure(errors="replace")  # type: ignore[union-attr]
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
+_make_console_safe()
+
+
 def _fail(message: str, code: int = EXIT_USAGE) -> None:
     typer.secho(message, fg=typer.colors.RED, err=True)
     raise typer.Exit(code)
@@ -40,6 +61,51 @@ def _interactive() -> bool:
         return sys.stdin.isatty()
     except (ValueError, OSError):
         return False
+
+
+@app.command()
+def demo(
+    platform: str = typer.Option(
+        "medium", "--platform", help="Platform to demo the check against (medium, devto, …)."
+    ),
+) -> None:
+    """Run the 30-second tour: review, fact-check, and platform check on a
+    small built-in article. No setup needed — just watch it work."""
+    from article_craft.demo import run_demo
+    from article_craft.platforms.base import available_platforms
+
+    if platform != "generic" and platform not in available_platforms():
+        _fail(
+            f"Unknown platform '{platform}'. Supported: "
+            + ", ".join(available_platforms())
+            + ", generic."
+        )
+    typer.echo(
+        "Article Craft demo — the full editorial pipeline on a built-in "
+        "article. No setup, nothing to configure.\n"
+    )
+    steps = run_demo(platform=platform)
+    for title, output in steps:
+        typer.secho(f"== {title} " + "=" * max(0, 58 - len(title)), fg=typer.colors.CYAN)
+        typer.echo(output)
+        typer.echo()
+    typer.secho("=" * 64, fg=typer.colors.CYAN)
+    typer.echo(
+        "That was the real pipeline. Your workflow:\n"
+        "  article-craft init               # one-time setup\n"
+        '  article-craft new --idea "…"   # start an article from an idea\n'
+        "  article-craft review my-draft.md # get your editor's report\n"
+        "\nSkill install for your AI agent: npx skills add TharunKumarReddyPolu/article-craft"
+    )
+
+
+@app.command()
+def doctor() -> None:
+    """Diagnose your environment and show fixes for common setup problems."""
+    from article_craft.doctor import run_doctor
+
+    typer.echo(run_doctor().as_text())
+    raise typer.Exit(EXIT_OK)
 
 
 @app.command()
@@ -116,7 +182,7 @@ def new(
     ),
     angle: str | None = typer.Option(None, "--angle", help="Your unique angle."),
     length: int | None = typer.Option(None, "--length", help="Target length in words."),
-    platform: str | None = typer.Option(None, "--platform", help="medium|generic (V1)."),
+    platform: str | None = typer.Option(None, "--platform", help="medium|generic."),
     output: Path = typer.Option(None, "--output", "-o", help="Write the brief to a file."),
 ) -> None:
     """Start a new article: produces a brief (promise, thesis, angle, title
@@ -131,7 +197,7 @@ def new(
     if article_type is not None and article_type not in type_ids():
         _fail(f"Unknown article type '{article_type}'. Valid types:\n  " + "\n  ".join(type_ids()))
     if platform is not None and platform not in ("medium", "generic"):
-        _fail(f"Unknown platform '{platform}'. V1 supports: medium, generic.")
+        _fail(f"Unknown platform '{platform}'. Supported: medium, generic.")
     if not idea:
         idea = typer.prompt("What do you want to write about?")
     if not audience:
@@ -205,7 +271,7 @@ def check(
     ),
     output: Path = typer.Option(None, "--output", "-o", help="Write the check to a file."),
 ) -> None:
-    """Pre-publish check for a platform. V2 implements Medium, DEV.to,
+    """Pre-publish check for a platform. Implements Medium, DEV.to,
     Hashnode, Substack, and LinkedIn (adaptation review)."""
     from article_craft.models.review import PlatformCheckStatus
     from article_craft.parsing import ArticleParseError, parse_article_file

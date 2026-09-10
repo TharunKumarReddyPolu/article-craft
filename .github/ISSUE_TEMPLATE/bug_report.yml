@@ -1,0 +1,46 @@
+name: Bug report
+description: Something broke or behaves differently than documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time! Run `article-craft doctor` first — it resolves
+        most environment issues (PATH, Python version, encoding) on the spot.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include the exact command you ran and the full output/error.
+      placeholder: article-craft review my-article.md --platform medium → …
+    validations:
+      required: true
+  - type: input
+    id: doctor
+    attributes:
+      label: `article-craft doctor` output
+      description: Paste the output (it prints exactly the environment details needed).
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where did this happen?
+      options:
+        - CLI
+        - MCP server
+        - Agent Skill (SKILL.md / workflows)
+        - Docs
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+    validations:
+      required: true

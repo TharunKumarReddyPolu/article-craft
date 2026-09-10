@@ -4,6 +4,42 @@ All notable changes to Article Craft are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows [Semantic Versioning](https://semver.org/).
 
+## 2.1.0 — 2026-09-10
+
+Friction-release: the fastest possible path from curiosity to first success,
+plus the community infrastructure a growing open-source project needs.
+
+### Added
+
+- **`article-craft demo`** — the 30-second tour: runs the real review →
+  fact-check → platform-check pipeline on a small built-in article. No
+  workspace, no config, no setup. If it runs, the install is healthy.
+- **`article-craft doctor`** — environment self-diagnosis: Python version,
+  PATH/package resolution, workspace state, voice profile, optional MCP
+  extra, and uv availability — each with an exact fix instead of a stack
+  trace. Informational checks never fail the command.
+- **Windows console fix** — reports containing ✅/⚠️/❌ no longer crash with
+  `UnicodeEncodeError` on cp1252 consoles; unencodable characters degrade
+  to replacements instead of killing the CLI.
+- **`npx skills add TharunKumarReddyPolu/article-craft`** — one-command skill
+  install across Claude Code, Cursor, Codex, and more via the open skills
+  CLI; now the documented primary install path.
+- **GitHub community infrastructure**: bug/feature/policy-update issue
+  templates, PR template with the project's honesty checklist, Contributor
+  Covenant Code of Conduct, Discussions enabled, and Dependabot for
+  dependencies and Actions.
+- **Release automation**: tag-triggered GitHub Release with sdist/wheel
+  artifacts and opt-in PyPI trusted publishing.
+- **Fixed project URLs** in package metadata (they pointed at a
+  non-existent organization) and expanded PyPI keywords.
+
+### Changed
+
+- README and getting-started now lead with the 30-second demo and the
+  `npx skills` one-liner; `uv tool install` from git is the documented CLI
+  path until the PyPI release exists.
+- Removed stale "V1"/"V2" wording from CLI help text.
+
 ## 2.0.0 — 2026-09-07
 
 Four new platform adapters, an MCP server, and four editorial capabilities.

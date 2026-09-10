@@ -32,7 +32,19 @@ class TestVersionAndHelp:
     def test_help_lists_all_commands(self) -> None:
         result = runner.invoke(app, ["--help"])
         assert result.exit_code == 0
-        for command in ("init", "new", "review", "check", "improve", "factcheck", "learn"):
+        for command in (
+            "demo",
+            "doctor",
+            "init",
+            "new",
+            "review",
+            "check",
+            "improve",
+            "factcheck",
+            "learn",
+            "export",
+            "adapt",
+        ):
             assert command in result.output
 
     @pytest.mark.parametrize(
@@ -122,7 +134,7 @@ class TestNew:
             ],
         )
         assert result.exit_code == 2
-        assert "V1 supports" in result.output
+        assert "Supported: medium, generic" in result.output
 
 
 class TestReview:
