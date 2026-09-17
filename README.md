@@ -109,7 +109,8 @@ You'll see the real editorial pipeline — review, fact-check, and a platform ch
 6. Review it: `article-craft review my-article.md --platform medium`
 7. Verify claims: `article-craft factcheck my-article.md`
 8. Pre-publish check: `article-craft check my-article.md --platform medium`
-9. Work through the publish checklist, fix what it finds, and publish manually
+9. Optional reach readiness: `article-craft reach my-article.md --platform medium`
+10. Work through the publish checklist, fix what it finds, and publish manually
 
 > Something behaving oddly? `article-craft doctor` diagnoses your environment (PATH, encoding, versions) and prints exact fixes.
 
@@ -222,7 +223,7 @@ Every deduction carries a written reason. The score is called the **Editorial Qu
 
 **10 article types** — technical tutorial, technical explainer, system design, architecture deep dive, case study, personal experience, opinion, beginner guide, advanced guide, listicle — each with purpose, structure, quality checklist, and common failure modes.
 
-**4 platform reference sets** — one per adapter — each sourced from that platform's official documentation with URLs and verification dates in per-platform `sources.yaml` files. Policies are versioned reference material, not hardcoded logic, because platform policies change. Where a platform publishes no policy (e.g. Hashnode AI content), the adapter reports NOT CHECKED rather than guessing.
+**5 platform reference sets** — one per adapter (Medium, DEV.to, Hashnode, Substack, LinkedIn) — each sourced from that platform's official documentation with URLs and verification dates in per-platform `sources.yaml` files, plus a `reach.md` documenting each platform's own published discoverability criteria. Policies are versioned reference material, not hardcoded logic, because platform policies change. Where a platform publishes no policy (e.g. Hashnode AI content), the adapter reports NOT CHECKED rather than guessing.
 
 **8 templates, 9 checklists** — one template per article type; editorial, originality, fact-check, reach-readiness checklists plus one per implemented platform.
 
@@ -265,9 +266,9 @@ Local-first, by design:
 | [Research](docs/research.md) | Source hierarchy, fact-checking, citations |
 | [Originality](docs/originality.md) | The originality guard and how to use sources honestly |
 | [Medium](docs/medium.md) | The Medium adapter, policies, and their sources |
-| [Platforms](docs/platforms.md) | All five adapters: DEV.to, Hashnode, Substack, LinkedIn — and their sources |
+| [Platforms](docs/platforms.md) | All five adapters: Medium, DEV.to, Hashnode, Substack, LinkedIn — and their sources |
 | [MCP server](docs/mcp.md) | Tool setup, tool list, and agent configuration |
-| [Roadmap](docs/roadmap.md) | What shipped in 2.0 and what's next (Ghost, images workflow…) |
+| [Roadmap](docs/roadmap.md) | What shipped in 2.0–2.2 and what's next (Ghost, analytics correlation…) |
 | [Contributing](docs/contributing.md) | How to add adapters, workflows, policy updates |
 
 ## 🚧 Limitations
