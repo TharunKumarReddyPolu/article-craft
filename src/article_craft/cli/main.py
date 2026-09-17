@@ -262,6 +262,45 @@ def review(
 
 
 @app.command()
+def reach(
+    article_path: Path = typer.Argument(..., help="Path to the article markdown file."),
+    platform: str = typer.Option(
+        "medium",
+        "--platform",
+        help="Platform to assess: medium, devto, hashnode, substack, linkedin.",
+    ),
+    output: Path = typer.Option(None, "--output", "-o", help="Write the report to a file."),
+) -> None:
+    """Reach-readiness: alignment with the platform's own published
+    discoverability criteria (e.g. Medium's Boost criteria). Advisory
+    signals only — never a prediction of reach or virality."""
+    from article_craft.parsing import ArticleParseError, parse_article_file
+    from article_craft.platforms.base import available_platforms
+    from article_craft.reports import render_reach_report
+
+    if platform == "generic":
+        typer.echo(
+            "Generic has no published reach criteria to align with; run "
+            "--platform <name> instead (" + ", ".join(available_platforms()) + ")."
+        )
+        raise typer.Exit(EXIT_OK)
+    if platform not in available_platforms():
+        _fail(
+            f"Unknown platform '{platform}'. Supported: "
+            + ", ".join(available_platforms())
+            + ", generic."
+        )
+    try:
+        article = parse_article_file(article_path)
+    except ArticleParseError as exc:
+        _fail(str(exc))
+        return
+    report_text = render_reach_report(article, platform)
+    _emit(report_text, output)
+    raise typer.Exit(EXIT_OK)
+
+
+@app.command()
 def check(
     article_path: Path = typer.Argument(..., help="Path to the article markdown file."),
     platform: str = typer.Option(

@@ -104,6 +104,8 @@ unattributed reuse before Medium (or a reader) does.
 
 ```bash
 article-craft check my-article.md --platform medium
+article-craft reach my-article.md --platform medium   # optional: alignment with
+                                                      # Medium's own Boost criteria
 ```
 
 Work through `skills/article-craft/checklists/medium.md` by hand. Then

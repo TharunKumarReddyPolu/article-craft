@@ -4,6 +4,46 @@ All notable changes to Article Craft are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 versioning follows [Semantic Versioning](https://semver.org/).
 
+## 2.2.0 — 2026-09-17
+
+Reach-readiness: alignment with each platform's **own published**
+discoverability criteria. This is the honest version of "help me go viral":
+the engines check the inputs writers actually control — official Boost
+hallmarks, tag/cover mechanics, subject-line surfaces, expertise signals —
+and never predict outcomes.
+
+### Added
+
+- **Reach engine** (`article_craft.editorial.reach`) — four advisory
+  cross-platform signals derived from official criteria: first-hand
+  experience, reader value, headline parity, and non-derivative content.
+  Every signal is a proxy, tagged HEURISTIC, and cited to a registered
+  source id.
+- **`article-craft reach <file> --platform <platform>`** — a reach-readiness
+  report for any supported platform, with per-check sources and the standing
+  disclaimer that reach is the platform's decision.
+- **`review_reach` in every adapter** — Medium (Boost hallmarks + topics),
+  DEV.to (tags, cover, series), Hashnode (tags, social image, SEO
+  description), Substack (subject-line surface, tags, alt text), LinkedIn
+  (expertise, media, substance). Reach checks also flow into
+  `article-craft check` and `review` reports.
+- **`reach_readiness` MCP tool** — the same report over MCP (8 tools total).
+- **Skill**: `workflows/reach-readiness.md`,
+  `checklists/reach-readiness.md`, per-platform `reach.md` references, and
+  SKILL.md routing for "align with the platform's own criteria" requests.
+
+### Changed
+
+- Reach checks carry `advisory=True`: they appear in reports but never flip
+  a pre-publish check's overall status — alignment signals inform, they do
+  not gate.
+- Headline-parity matching now excludes heading lines, so the title no
+  longer matches itself via the H1 carried inside section bodies.
+- **`sources.yaml` integrity is enforced**: a broken or missing sources.yaml
+  now raises instead of silently disabling the unknown-source honesty guard
+  (three platform files had YAML quoted-scalar bugs that had disabled the
+  guard; fixed, and the new reach tests pin the guard).
+
 ## 2.1.0 — 2026-09-10
 
 Friction-release: the fastest possible path from curiosity to first success,

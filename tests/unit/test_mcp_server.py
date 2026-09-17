@@ -67,6 +67,7 @@ def test_server_defines_expected_tools() -> None:
         "check_images",
         "adapt_social_post",
         "export_prep",
+        "reach_readiness",
         "supported_platforms",
     } <= tools
 
@@ -93,6 +94,9 @@ def test_tools_run_against_real_article(tmp_path) -> None:
     assert "From my article" in post
     platforms = _call(server.supported_platforms)
     assert "devto" in platforms
+    reach = _call(server.reach_readiness, path, platform="devto")
+    assert "Reach Readiness" in reach
+    assert "never" in reach.lower() or "advisory" in reach.lower()
 
 
 def test_export_prep_writes_file(tmp_path) -> None:

@@ -81,10 +81,11 @@ Each editorial workflow is presented in a step-by-step method covering:
 | 🎭 Voice Profiles | `article-craft learn ./my-articles/` builds an advisory profile of tone, sentence length, formatting, and habits from your own writing |
 | 📐 Article Types | 10 types (tutorial, explainer, system design, case study, personal experience, opinion, beginner guide, listicle…) with templates and failure modes |
 | 🖼️ Image & Alt-Text | Detects missing, weak, or placeholder alt text and cover-image problems before your readers do |
+| 📈 Reach Readiness | `article-craft reach` scores alignment with each platform's **own published** discoverability criteria (Medium's Boost hallmarks, DEV tags, Substack subject lines, LinkedIn expertise guidance) — advisory signals with sources, never a virality prediction |
 | ⚖️ Contradiction Tracking | When research sources disagree, the conflict is surfaced and resolved by source authority — not silently averaged |
 | 🔁 Social Adaptation | `article-craft adapt` derives an attributed LinkedIn/generic post; every factual claim traces to the source article |
 | 📤 Export Prep | `article-craft export --platform …` writes platform-ready files locally — zero network calls, no auto-publishing |
-| 🖥️ MCP Server | `article-craft-mcp` exposes review/check/factcheck/images as MCP tools for any MCP-capable agent |
+| 🖥️ MCP Server | `article-craft-mcp` exposes review/check/factcheck/images/reach as MCP tools for any MCP-capable agent |
 | 🤝 Agent Skill Standard | Works across Claude Code, Codex, Cursor, Gemini CLI, and any agent that reads `SKILL.md` — one canonical skill, no per-agent forks |
 | 🏠 Local-First Privacy | No database, no telemetry, no analytics, no SaaS. Publishing stays a manual human act |
 
@@ -175,8 +176,9 @@ One idea → one canonical article → platform-specific preparation:
 | 6. Fact-check | `article-craft factcheck article.md` | Every claim classified: VERIFIED / LIKELY / UNVERIFIED / CONTRADICTED / OPINION / ASSUMPTION |
 | 7. Originality | originality workflow | Mosaic-plagiarism risk, structural mirroring, unattributed reuse flagged with fixes |
 | 8. Platform check | `article-craft check article.md --platform medium\|devto\|hashnode\|substack\|linkedin` | Policy-grounded pre-publish check with PASS/WARNING/ERROR per category |
-| 9. Export & adapt | `article-craft export` / `article-craft adapt` | Platform-ready files written locally; attributed social post derived from the article |
-| 10. Publish checklist | platform checklist | The final human pass — including the things only you can verify |
+| 9. Reach readiness | `article-craft reach article.md --platform medium` | Alignment with the platform's own published discoverability criteria — advisory signals with sources, never a prediction |
+| 10. Export & adapt | `article-craft export` / `article-craft adapt` | Platform-ready files written locally; attributed social post derived from the article |
+| 11. Publish checklist | platform checklist | The final human pass — including the things only you can verify |
 
 Then, in your agent: *"Review this draft like my editor"* — the skill activates, runs the deterministic analysis, and adds the judgment layer on top.
 
@@ -216,13 +218,13 @@ Every deduction carries a written reason. The score is called the **Editorial Qu
 
 ## 🧰 What's Inside
 
-**10 workflows** — `new-article`, `outline`, `review`, `improve`, `fact-check`, `originality`, `medium-check`, `platform-check`, `research-interview`, `social-adaptation` — each a step-by-step editorial method, not a prompt template.
+**11 workflows** — `new-article`, `outline`, `review`, `improve`, `fact-check`, `originality`, `medium-check`, `platform-check`, `reach-readiness`, `research-interview`, `social-adaptation` — each a step-by-step editorial method, not a prompt template.
 
 **10 article types** — technical tutorial, technical explainer, system design, architecture deep dive, case study, personal experience, opinion, beginner guide, advanced guide, listicle — each with purpose, structure, quality checklist, and common failure modes.
 
 **4 platform reference sets** — one per adapter — each sourced from that platform's official documentation with URLs and verification dates in per-platform `sources.yaml` files. Policies are versioned reference material, not hardcoded logic, because platform policies change. Where a platform publishes no policy (e.g. Hashnode AI content), the adapter reports NOT CHECKED rather than guessing.
 
-**8 templates, 8 checklists** — one template per article type; editorial, originality, fact-check checklists plus one per implemented platform.
+**8 templates, 9 checklists** — one template per article type; editorial, originality, fact-check, reach-readiness checklists plus one per implemented platform.
 
 **Editorial Quality Score** — Reader Value 20, Originality 15, Clarity 15, Structure 10, Technical Accuracy 15, Evidence 10, Voice/Human Contribution 10, Platform Compatibility 5. Every deduction requires a written reason.
 
@@ -271,6 +273,7 @@ Local-first, by design:
 ## 🚧 Limitations
 
 - The deterministic checks are heuristics. They catch common failure modes; they don't replace a human editor, and they don't evaluate deep technical correctness — your agent's judgment layer does that, with the skill's references as its method.
+- Reach-readiness output is alignment with platforms' **own published** criteria — advisory signals, not predictions. No tool can promise Boost, virality, or ranking, and Article Craft never tries.
 - Originality analysis is risk-surfacing between documents you supply, not a plagiarism *detector* and not a clearance certificate.
 - The Medium adapter reflects the Help Center pages verified on the dates in `sources.yaml`. Medium changes its policies; re-verify before relying on any single rule. The tool tells you the date each rule was last verified.
 - Implemented platforms are **Medium, DEV.to, Hashnode, Substack, LinkedIn**. Other platforms (Ghost, personal blogs, newsletters) are roadmap items, not silent stubs.

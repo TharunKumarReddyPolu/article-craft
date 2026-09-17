@@ -47,6 +47,7 @@ claude mcp add article-craft -- article-craft-mcp
 | `platform_check` | Policy-grounded check against `medium`, `devto`, `hashnode`, `substack`, or `linkedin` |
 | `extract_claims` | Deterministic claim extraction with classification hints (no verification — see below) |
 | `check_images` | Image and alt-text audit of a markdown article |
+| `reach_readiness` | Alignment with a platform's own published discoverability criteria (advisory; never a reach prediction) |
 | `analyze_title` | Title analysis: clickbait, keyword stuffing, length, promise clarity |
 | `build_outline` | Editorial outline for an idea, audience, and article type |
 | `export_article` | Write platform-ready files locally (zero network) |
@@ -72,5 +73,5 @@ echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":
 {"jsonrpc":"2.0","id":2,"method":"tools/list"}' | article-craft-mcp
 ```
 
-You should see a JSON-RPC response listing the seven tools. The test suite
+You should see a JSON-RPC response listing the eight tools. The test suite
 (`tests/unit/test_mcp_server.py`) runs this handshake in-process.

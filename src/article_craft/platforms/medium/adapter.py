@@ -495,6 +495,70 @@ class MediumAdapter(SourcesBackedAdapter):
             )
         return checks
 
+    def review_reach(self, article: Article) -> list[PlatformCheck]:
+        """Alignment with Medium's officially stated Boost criteria.
+
+        Derived from medium-distribution-guidelines ("hallmarks of the type
+        of high-quality stories we Boost") and medium-using-topics. Medium
+        states these elements "should not be interpreted as a checklist of
+        components that guarantee Boost" — so every check here is advisory
+        and none of this predicts an outcome.
+        """
+        from article_craft.editorial.reach import (
+            first_hand_experience_signal,
+            headline_parity_check,
+            non_derivative_signal,
+            reader_value_signal,
+        )
+
+        checks = [
+            first_hand_experience_signal(article, "medium-distribution-guidelines"),
+            reader_value_signal(article, "medium-distribution-guidelines"),
+            headline_parity_check(article, "medium-distribution-guidelines"),
+            non_derivative_signal(article, "medium-distribution-guidelines"),
+        ]
+
+        # Official, mechanical discoverability factors (medium-using-topics,
+        # medium-publish-distribution).
+        fm = article.frontmatter
+        if not fm.topics:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Discoverability",
+                    status=PlatformCheckStatus.WARNING,
+                    detail="No topics set. Medium: adding relevant topics "
+                    "helps discoverability; stories are matched to readers "
+                    "via the topics they follow. Add up to five.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="medium-using-topics",
+                )
+            )
+        elif len(fm.topics) > 5:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Discoverability",
+                    status=PlatformCheckStatus.WARNING,
+                    detail=f"{len(fm.topics)} topics; Medium allows up to five per post.",
+                    rule_class=RuleClass.POLICY,
+                    source_id="medium-using-topics",
+                )
+            )
+        else:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Discoverability",
+                    status=PlatformCheckStatus.PASS,
+                    detail=f"{len(fm.topics)} topic(s) set — stories are matched "
+                    "to readers via topics they follow (official: relevant "
+                    "topics aid discoverability).",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="medium-using-topics",
+                )
+            )
+        return checks
+
     def generate_platform_checklist(self, article: Article) -> list[str]:
         return [
             "Title accurately represents the story (no sensationalism, no genericness)",

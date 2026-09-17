@@ -299,6 +299,86 @@ class HashnodeAdapter(SourcesBackedAdapter):
         )
         return checks
 
+    def review_reach(self, article: Article) -> list[PlatformCheck]:
+        """Alignment with Hashnode's documented discoverability mechanics
+        (hashnode-tags, hashnode-seo, hashnode-write-article). No boost
+        program exists to predict; reach follows from documented mechanics:
+        tags, SEO fields, and the community graph. Advisory only.
+        """
+        from article_craft.editorial.reach import headline_parity_check
+
+        checks: list[PlatformCheck] = []
+        fm = article.frontmatter
+        if not fm.topics:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Tags",
+                    status=PlatformCheckStatus.WARNING,
+                    detail="No tags in frontmatter. Hashnode articles are "
+                    "discovered through the tag system; select tags from "
+                    "Hashnode's tag list in the editor.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="hashnode-tags",
+                )
+            )
+        else:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Tags",
+                    status=PlatformCheckStatus.PASS,
+                    detail=f"{len(fm.topics)} tag(s) set: {', '.join(fm.topics[:6])}. "
+                    "Tags drive on-platform discovery via tag pages and "
+                    "followed-tag feeds.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="hashnode-tags",
+                )
+            )
+
+        cover = fm.extra.get("cover_image")
+        if cover:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Social Image",
+                    status=PlatformCheckStatus.PASS,
+                    detail="Cover image set — it is the social card readers see "
+                    "before clicking (recommended 1200x630).",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="hashnode-seo",
+                )
+            )
+        else:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Social Image",
+                    status=PlatformCheckStatus.NOT_CHECKED,
+                    detail="No cover_image. The blog-level social image and the "
+                    "post cover are what search engines and social cards show; "
+                    "a weak card costs clicks on every share.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="hashnode-seo",
+                )
+            )
+
+        if not fm.extra.get("search_description") and not article.effective_subtitle:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — SEO Description",
+                    status=PlatformCheckStatus.NOT_CHECKED,
+                    detail="Neither a search description nor a subtitle is set — "
+                    "search engines need one of these for the snippet shown "
+                    "before the click.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="hashnode-seo",
+                )
+            )
+        checks.append(headline_parity_check(article, "hashnode-seo"))
+        return checks
+
     def generate_platform_checklist(self, article: Article) -> list[str]:
         return [
             "Cover photo (recommended 1200x630) if the post deserves one",

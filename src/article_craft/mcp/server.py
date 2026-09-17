@@ -22,7 +22,12 @@ from article_craft.exporter import export_for_platform, render_export_report
 from article_craft.models.article import Article
 from article_craft.parsing import ArticleParseError, parse_article_file
 from article_craft.platforms.base import available_platforms, get_adapter
-from article_craft.reports import images_platform_check, render_platform_check_for, render_review
+from article_craft.reports import (
+    images_platform_check,
+    render_platform_check_for,
+    render_reach_report,
+    render_review,
+)
 from article_craft.research.claims import factcheck_report_markdown
 
 
@@ -137,6 +142,22 @@ def export_prep(path: str, platform: str, out_dir: str = "exports") -> str:
     except ValueError as exc:
         raise ValueError(str(exc)) from exc
     return render_export_report(result)
+
+
+@mcp.tool()
+def reach_readiness(path: str, platform: str) -> str:
+    """Reach-readiness: alignment of an article with a platform's own
+    published discoverability criteria (Medium Boost criteria, DEV tags/
+    cover, Substack subject-line mechanics, LinkedIn expertise guidance,
+    Hashnode tags/SEO). Advisory signals only — never a prediction of
+    reach, ranking, or virality. Platforms: medium, devto, hashnode,
+    substack, linkedin."""
+    if platform not in available_platforms():
+        raise ValueError(
+            f"Unknown platform '{platform}'. Supported: {', '.join(available_platforms())}"
+        )
+    article = _parse(path)
+    return render_reach_report(article, platform)
 
 
 @mcp.tool()

@@ -304,6 +304,81 @@ class SubstackAdapter(SourcesBackedAdapter):
         )
         return checks
 
+    def review_reach(self, article: Article) -> list[PlatformCheck]:
+        """Alignment with Substack's documented reach mechanics
+        (substack-title-testing, substack-tags, substack-alt-text). The
+        primary channel is the author's own email list: the title doubles as
+        the email subject line, so subject-line strength IS the reach
+        surface. Advisory only — no open/ranking predictions.
+        """
+        from article_craft.editorial.reach import (
+            first_hand_experience_signal,
+            headline_parity_check,
+            reader_value_signal,
+        )
+
+        checks: list[PlatformCheck] = [
+            first_hand_experience_signal(article, "substack-content-guidelines"),
+            reader_value_signal(article, "substack-content-guidelines"),
+        ]
+        fm = article.frontmatter
+        if not fm.topics:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Tags",
+                    status=PlatformCheckStatus.WARNING,
+                    detail="No tags in frontmatter. Keyword tags organize posts "
+                    "for on-platform discovery (search and topic browsing); "
+                    "add them in post settings.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="substack-tags",
+                )
+            )
+        else:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Tags",
+                    status=PlatformCheckStatus.PASS,
+                    detail=f"{len(fm.topics)} tag(s) set: {', '.join(fm.topics[:6])}. "
+                    "Tags make the post findable in on-platform search and "
+                    "topic pages.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="substack-tags",
+                )
+            )
+        if not article.effective_subtitle:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Subtitle/Preheader",
+                    status=PlatformCheckStatus.NOT_CHECKED,
+                    detail="No subtitle. It renders as the email preview text "
+                    "beside the subject line — the second thing a subscriber "
+                    "reads when deciding to open.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="substack-title-testing",
+                )
+            )
+        images_without_alt = [img for img in article.images if not (img.alt and img.alt.strip())]
+        if article.images and images_without_alt:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Alt Text",
+                    status=PlatformCheckStatus.WARNING,
+                    detail=f"{len(images_without_alt)} of {len(article.images)} "
+                    "image(s) lack alt text. Substack officially supports alt "
+                    "text ('clear, concise description'); email clients often "
+                    "block images, so the alt text is what readers get.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="substack-alt-text",
+                )
+            )
+        checks.append(headline_parity_check(article, "substack-title-testing"))
+        return checks
+
     def generate_platform_checklist(self, article: Article) -> list[str]:
         return [
             "Title works as both web headline and email subject line",

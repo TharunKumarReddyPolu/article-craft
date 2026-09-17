@@ -18,8 +18,8 @@ sources:
       - cover photo recommended 1200x630 px
       - optional subtitle
       - custom OG image 1200x630 px for social sharing
-      - canonical URL via "Are you republishing? -> Add Original Article"
-      - "Hide from Hashnode Community" option
+      - 'canonical URL via the republishing flow (Add Original Article)'
+      - 'the Hide-from-Hashnode-Community option'
       - editable slug; backdating
     notes: >
       The canonical per-article settings contract. Cover/OG image sizes are
@@ -88,7 +88,7 @@ sources:
     date_updated: null
     last_verified: 2026-09-07
     covers:
-      - "GitHub as Source" publishing: .md files only
+      - 'GitHub-as-Source publishing: .md files only'
       - front matter contract for GitHub publishing (domain, comma-separated
         tag slugs, publishAs for team publications)
       - articles sourced from GitHub are edited via GitHub, not the platform

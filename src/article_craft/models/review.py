@@ -110,6 +110,7 @@ class PlatformCheck(BaseModel):
     detail: str
     rule_class: RuleClass = RuleClass.POLICY
     source_id: str | None = None  # id in platforms/medium/sources.yaml
+    advisory: bool = False  # reach-readiness signals: shown, never gate-blocking
     findings: list[str] = Field(default_factory=list)
 
 

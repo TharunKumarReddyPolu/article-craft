@@ -10,8 +10,8 @@ sources:
     covers:
       - article publishing tool (desktop only; not on mobile app)
       - cover image/video above title; title field separate from body
-      - toolbar: images/video, links, code snippets, embeds, lists,
-        blockquotes, dividers, bold/italic
+      - 'toolbar: images/video, links, code snippets, embeds, lists,
+        blockquotes, dividers, bold/italic'
       - SEO settings: article URL, SEO title, SEO description
       - publish as self or Page; as article or newsletter edition
       - draft sharing; comment disabling; @mentions
@@ -59,12 +59,12 @@ sources:
     last_verified: 2026-09-07
     covers:
       - content should reflect the member's own voice, perspective, experience
-      - official "AI slop" definition (low-effort, generic, no point of view)
-      - AI-assisted welcome when it reflects a real person's perspective;
-        generic content "less likely to be widely distributed"
+      - official AI-slop definition (low-effort, generic, no point of view)
+      - 'AI-assisted welcome when it reflects a real person perspective;
+        generic content less likely to be widely distributed'
       - LinkedIn urges review/edit/approval of AI-assisted content
       - disclosure recommended when relying heavily on AI
-      - "Seems like AI slop" community feedback -> Post analytics tip
+      - 'the Seems-like-AI-slop community feedback and Post analytics tip'
     notes: >
       The primary policy source for the LinkedIn adapter's AI checks. Quote
       the slop definition verbatim in adapter output.

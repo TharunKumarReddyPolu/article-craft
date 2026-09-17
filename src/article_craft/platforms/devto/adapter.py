@@ -374,6 +374,84 @@ class DevToAdapter(SourcesBackedAdapter):
             )
         return checks
 
+    def review_reach(self, article: Article) -> list[PlatformCheck]:
+        """Alignment with DEV's documented discoverability mechanics
+        (dev-editor-guide, dev-help-writing). DEV publishes no boost
+        program; reach follows from tags, cover cards, and canonical
+        integrity. Advisory only — placement is community-driven.
+        """
+        from article_craft.editorial.reach import headline_parity_check
+
+        checks: list[PlatformCheck] = []
+        tags = article.frontmatter.topics
+        if not tags:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Tags",
+                    status=PlatformCheckStatus.WARNING,
+                    detail="No tags set. Tags are DEV's primary discovery "
+                    "mechanic: posts surface on tag pages and in the feeds of "
+                    "members following those tags. Add up to four.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="dev-editor-guide",
+                )
+            )
+        else:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Tags",
+                    status=PlatformCheckStatus.PASS,
+                    detail=f"{len(tags)} tag(s) set: {', '.join(tags[:4])}. "
+                    "Posts are served to followers of these tags — tags should "
+                    "describe what the post is actually about.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="dev-editor-guide",
+                )
+            )
+
+        cover = article.frontmatter.extra.get("cover_image")
+        if cover:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Cover Image",
+                    status=PlatformCheckStatus.PASS,
+                    detail="Cover image set — it is the post's card in feeds "
+                    "and social previews (official best size: 1000x420).",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="dev-editor-guide",
+                )
+            )
+        else:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Cover Image",
+                    status=PlatformCheckStatus.NOT_CHECKED,
+                    detail="No cover_image in frontmatter. The cover is the "
+                    "card shown in feeds/social previews; official best size "
+                    "is 1000x420.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="dev-editor-guide",
+                )
+            )
+
+        if article.frontmatter.extra.get("series"):
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Series",
+                    status=PlatformCheckStatus.PASS,
+                    detail="Part of a series — serialized readers return.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="dev-editor-guide",
+                )
+            )
+        checks.append(headline_parity_check(article, "dev-editor-guide"))
+        return checks
+
     def generate_platform_checklist(self, article: Article) -> list[str]:
         items = [
             "Tags: at most 4, comma-separated, matching DEV's tag list",
@@ -399,6 +477,7 @@ class DevToAdapter(SourcesBackedAdapter):
             + self.review_formatting(article)
             + self.review_policy(article)
             + self.review_distribution(article)
+            + self.review_reach(article)
         )
         errors = [c for c in all_checks if c.status is PlatformCheckStatus.ERROR]
         warnings = [c for c in all_checks if c.status is PlatformCheckStatus.WARNING]

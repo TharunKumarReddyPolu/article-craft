@@ -69,6 +69,61 @@ def images_platform_check(article: Article) -> PlatformCheck:
     )
 
 
+def render_reach_report(article: Article, platform: str) -> str:
+    """Reach-readiness report for one platform.
+
+    Shows ONLY the adapter's alignment signals against that platform's own
+    published discoverability criteria, plus a disclaimer that reach is the
+    platform's decision. This is not a ranking/virality prediction and must
+    never be presented as one.
+    """
+    adapter_cls = get_adapter(platform)
+    if adapter_cls is None:
+        raise ValueError(
+            f"No adapter registered for '{platform}'. Available: "
+            + ", ".join(available_platforms())
+        )
+    adapter = adapter_cls()
+    reach_checks = adapter.review_reach(article)
+    if not reach_checks:
+        return (
+            f"# Reach Readiness — {platform}"
+            f"\n\n{platform} publishes no discoverability criteria to align "
+            "with; no reach checks are offered rather than invented."
+        )
+    counts = {s: 0 for s in PlatformCheckStatus}
+    for c in reach_checks:
+        counts[c.status] = counts.get(c.status, 0) + 1
+    summary = " | ".join(f"{STATUS_EMOJI[s]} {n}" for s, n in counts.items() if n)
+    lines = [
+        f"# Reach Readiness — {platform}",
+        "",
+        "Alignment with this platform's own published discoverability "
+        "criteria. Advisory signals only: reach is the platform's decision "
+        "and nothing here predicts distribution, ranking, or virality.",
+        "",
+        f"**Signals: {summary}**",
+        "",
+    ]
+    by_cat: dict[str, list[PlatformCheck]] = {}
+    for c in reach_checks:
+        by_cat.setdefault(c.category, []).append(c)
+    for category, checks in sorted(by_cat.items()):
+        for c in checks:
+            lines.append(f"## {category} — **{STATUS_EMOJI[c.status]}**")
+            lines.append("")
+            lines.append(c.detail)
+            lines.append("")
+            for f in c.findings:
+                lines.append(f"- {f}")
+            if c.findings:
+                lines.append("")
+            lines.append(f"_Source: {c.source_id} ({c.rule_class.value})_")
+            lines.append("")
+    lines.append(f"> {DISCLAIMER}")
+    return "\n".join(lines)
+
+
 def render_platform_check_for(article: Article, platform: str) -> str:
     """Pre-publish check for any registered platform adapter."""
     adapter_cls = get_adapter(platform)

@@ -27,6 +27,18 @@ implemented. What remains is a possibility, not a promise.
 - **Export prep** — platform-ready files written locally for all five
   platforms (zero network calls).
 
+## Shipped in 2.1/2.2
+
+- **Zero-friction onboarding** — `demo` and `doctor` commands, working
+  install paths, one-command skill install (`npx skills add`), Windows
+  console fix, community files, Windows CI.
+- **Reach-readiness layer** — `article-craft reach` and a `review_reach`
+  hook in every adapter: alignment with each platform's own published
+  discoverability criteria (Medium Boost hallmarks, DEV tags/cover,
+  Hashnode tags/SEO, Substack subject-line mechanics, LinkedIn expertise
+  guidance). Advisory signals, source-cited, never outcome predictions.
+  `reach_readiness` MCP tool included.
+
 ## V3 possibilities
 
 - **Personal knowledge base** — link your research.md artifacts across

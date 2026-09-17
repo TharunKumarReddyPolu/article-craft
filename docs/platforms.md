@@ -20,6 +20,14 @@ article-craft check my-article.md --platform substack
 article-craft check my-article.md --platform linkedin
 ```
 
+Each adapter also carries a reach-readiness layer (`article-craft reach`):
+alignment signals against the platform's **own published** discoverability
+criteria — Medium's Boost hallmarks, DEV's tag/cover mechanics, Hashnode's
+tag/SEO fields, Substack's subject-line surface, LinkedIn's expertise
+guidance. Reach checks are advisory: they are cited to sources, shown in
+reports, and never gate the pre-publish verdict, because no tool can predict
+distribution — the platform decides.
+
 ## Where the rules come from
 
 Every adapter rule traces to a versioned reference file:

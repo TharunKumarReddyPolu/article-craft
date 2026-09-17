@@ -1,6 +1,6 @@
 [project]
 name = "article-craft"
-version = "2.1.0"
+version = "2.2.0"
 description = "An AI editorial workflow for writing better articles. Helps writers research, structure, review, fact-check, improve, and prepare articles for publishing."
 readme = "README.md"
 license = { text = "Apache-2.0" }

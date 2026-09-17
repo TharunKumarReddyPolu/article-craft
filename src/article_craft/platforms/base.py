@@ -64,6 +64,12 @@ class PlatformAdapter(Protocol):
         outcomes."""
         ...
 
+    def review_reach(self, article: Article) -> list[PlatformCheck]:
+        """Alignment with the platform's own published discoverability
+        criteria (e.g. Medium's Boost criteria). Advisory readiness signals
+        only; never predicts reach outcomes. Default: no reach checks."""
+        ...
+
     def generate_platform_checklist(self, article: Article) -> list[str]:
         """Platform-specific checklist items for the author's final pass."""
         ...
@@ -132,6 +138,12 @@ class SourcesBackedAdapter:
         """Distribution-guideline risk checks. Advisory only."""
         raise NotImplementedError
 
+    def review_reach(self, article: Article) -> list[PlatformCheck]:
+        """Reach-readiness checks vs. the platform's stated criteria.
+        Adapters override this where official guidance exists; the shared
+        default emits nothing rather than inventing criteria."""
+        return []
+
     def generate_platform_checklist(self, article: Article) -> list[str]:
         """Platform-specific checklist items for the author's final pass."""
         raise NotImplementedError
@@ -143,11 +155,28 @@ class SourcesBackedAdapter:
     # -- shared machinery -- #
 
     def _known_source_ids(self) -> frozenset[str]:
+        """Registered source ids from this platform's sources.yaml.
+
+        A broken or missing sources.yaml is a hard error, never a silent
+        empty set: a silently disabled honesty guard would let adapters
+        drift from their documented sources without notice.
+        """
         try:
             data = yaml.safe_load(self._sources_path.read_text(encoding="utf-8"))
-            return frozenset(entry["id"] for entry in data.get("sources", []))
-        except (OSError, yaml.YAMLError):
-            return frozenset()
+        except OSError as exc:
+            raise RuntimeError(
+                f"sources.yaml for '{self.platform_id}' is missing or unreadable "
+                f"at {self._sources_path} — adapter checks cannot be verified "
+                "against documented sources."
+            ) from exc
+        except yaml.YAMLError as exc:
+            raise RuntimeError(
+                f"sources.yaml for '{self.platform_id}' is not valid YAML "
+                f"({self._sources_path}): {exc}"
+            ) from exc
+        if not isinstance(data, dict) or not isinstance(data.get("sources"), list):
+            raise RuntimeError(f"sources.yaml for '{self.platform_id}' has no 'sources' list.")
+        return frozenset(entry["id"] for entry in data["sources"])
 
     def full_report(
         self,
@@ -167,17 +196,19 @@ class SourcesBackedAdapter:
             + self.review_formatting(article)
             + self.review_policy(article)
             + self.review_distribution(article)
+            + self.review_reach(article)
             + (extra_checks or [])
         )
-        if any(c.status is PlatformCheckStatus.ERROR for c in checks):
+        gating = [c for c in checks if not c.advisory]
+        if any(c.status is PlatformCheckStatus.ERROR for c in gating):
             overall = PlatformCheckStatus.ERROR
-        elif any(c.status is PlatformCheckStatus.WARNING for c in checks):
+        elif any(c.status is PlatformCheckStatus.WARNING for c in gating):
             overall = PlatformCheckStatus.WARNING
         else:
             overall = PlatformCheckStatus.PASS
         fixes = [
             f"{c.category}: {c.detail}"
-            for c in checks
+            for c in gating
             if c.status in (PlatformCheckStatus.ERROR, PlatformCheckStatus.WARNING)
         ]
         known = self._known_source_ids()

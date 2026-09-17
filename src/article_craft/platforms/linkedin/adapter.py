@@ -349,6 +349,51 @@ class LinkedInAdapter(SourcesBackedAdapter):
             )
         return checks
 
+    def review_reach(self, article: Article) -> list[PlatformCheck]:
+        """Alignment with LinkedIn's own published guidance
+        (linkedin-article-tips, linkedin-pcp): write from expertise, stay
+        focused, deliver substance, use media. LinkedIn publishes no
+        distribution criteria to predict; these are advisory readiness
+        signals only.
+        """
+        from article_craft.editorial.reach import (
+            first_hand_experience_signal,
+            non_derivative_signal,
+            reader_value_signal,
+        )
+
+        checks: list[PlatformCheck] = [
+            first_hand_experience_signal(article, "linkedin-article-tips"),
+            reader_value_signal(article, "linkedin-article-tips"),
+            non_derivative_signal(article, "linkedin-ai-best-practices"),
+        ]
+        if not article.images:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Media",
+                    status=PlatformCheckStatus.NOT_CHECKED,
+                    detail="No images. LinkedIn's official article tips "
+                    "recommend media to showcase concrete examples; a post "
+                    "without any visual gets less feed real estate.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="linkedin-article-tips",
+                )
+            )
+        else:
+            checks.append(
+                PlatformCheck(
+                    category="Reach — Media",
+                    status=PlatformCheckStatus.PASS,
+                    detail=f"{len(article.images)} image(s) present — aligned "
+                    "with the official tip to use media to showcase examples.",
+                    rule_class=RuleClass.RECOMMENDATION,
+                    advisory=True,
+                    source_id="linkedin-article-tips",
+                )
+            )
+        return checks
+
     def generate_platform_checklist(self, article: Article) -> list[str]:
         return [
             "Choose the shape: feed post (plain text, 3,000 chars) vs article "

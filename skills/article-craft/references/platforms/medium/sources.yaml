@@ -43,7 +43,7 @@ sources:
     url: "https://help.medium.com/hc/en-us/articles/360006362473-Medium-s-Distribution-Guidelines-How-curators-review-stories-for-Boost-General-and-Network-Distribution"
     authority: OFFICIAL
     date_updated: "2026-06-29"
-    last_verified: "2026-09-06"
+    last_verified: "2026-09-17"
     rules: [distribution, titles, images, topics]
     notes: >
       Three distribution tiers: Network (baseline), General, Boost. Boost
@@ -56,6 +56,31 @@ sources:
       Medium itself or the Partner Program get Network Distribution only.
       Verbatim: "these elements should not be interpreted as a checklist of
       components that guarantee Boost."
+
+  - id: medium-using-topics
+    title: "Using topics"
+    url: "https://help.medium.com/hc/en-us/articles/214741038-Using-topics"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-17"
+    rules: [topics, reach]
+    notes: >
+      "Adding relevant topic to your post will help with its discoverability
+      around the platform. You can add up to five topics per post." Official
+      statement that relevant topics aid discoverability.
+
+  - id: medium-publish-distribution
+    title: "What happens to your story when you publish on Medium"
+    url: "https://help.medium.com/hc/en-us/articles/360018677974-What-happens-to-your-story-when-you-publish-on-Medium"
+    authority: OFFICIAL
+    date_updated: null
+    last_verified: "2026-09-17"
+    rules: [reach, distribution]
+    notes: >
+      Explains the two distribution paths (open platform + personal network vs.
+      Medium's distribution/Boost networks), that publication followers receive
+      stories via Digests and the Following tab, and that "Presentations" in
+      story stats shows how often Medium suggested the story.
 
   - id: medium-plagiarism-guidelines
     title: "Plagiarism Guidelines"
