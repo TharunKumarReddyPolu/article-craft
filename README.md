@@ -231,6 +231,14 @@ Every deduction carries a written reason. The score is called the **Editorial Qu
 
 **Platform adapters** — Medium, DEV.to, Hashnode, Substack, and LinkedIn behind a small `PlatformAdapter` protocol. DEV.to/Hashnode/Substack/LinkedIn were added in 2.0; Ghost and others remain on the [`roadmap`](docs/roadmap.md) — the abstraction makes them straightforward, the policy research is the work.
 
+**Worked examples** — a full article with its research bundle and voice profile, so you can see what "ready to publish" looks like before writing a word of your own:
+
+| Example | See |
+|---|---|
+| A finished case-study article | [`examples/articles/kafka-fanout-case-study.md`](examples/articles/kafka-fanout-case-study.md) |
+| The research bundle behind it, claims pre-classified | [`examples/research/kafka-fanout-research.md`](examples/research/kafka-fanout-research.md) |
+| A custom voice profile built from a corpus of your own past articles | [`examples/profiles/voice-profile-example.md`](examples/profiles/voice-profile-example.md) |
+
 ## 🧭 Philosophy
 
 **What Article Craft IS:** a writing coach, editorial assistant, research assistant, fact-checking assistant, originality assistant, technical writing reviewer, and Medium publishing-preparation assistant.

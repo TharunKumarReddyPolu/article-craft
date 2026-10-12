@@ -109,6 +109,11 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+# Raise DeprecationWarnings (and friends) from dependencies into test
+# failures, so typer/rich/mcp deprecations surface in CI before they break
+# a real release. Currently clean; if a future dependency bump adds a
+# warning inside tested code paths, fix or filter it at the bump site.
+filterwarnings = ["error"]
 markers = [
     "integration: end-to-end CLI tests (may be slower)",
 ]

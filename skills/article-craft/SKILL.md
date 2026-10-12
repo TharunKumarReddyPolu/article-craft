@@ -4,7 +4,7 @@ description: Helps writers research, structure, review, fact-check, improve, and
 license: Apache-2.0
 compatibility: Optional CLI acceleration via `pip install article-craft` (or `uv tool install article-craft`); all workflows also work with agent reasoning and file tools alone. Python 3.11+ for the CLI. Optional MCP server via `article-craft[mcp]`.
 metadata:
-  version: "2.0.0"
+  version: "2.2.0"
   project: article-craft
   philosophy: "Human ideas + human experience + AI-assisted research + AI-assisted editing = better writing. The user remains the author."
 ---

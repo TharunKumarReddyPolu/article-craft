@@ -6,6 +6,9 @@ Checks (per https://agentskills.io/specification):
 - name: <=64 chars, [a-z0-9-], no leading/trailing/double hyphen, == dir name
 - description: 1-1024 chars, non-empty, mentions what + when
 - optional fields: license (str), compatibility (<=500), metadata (str->str)
+- metadata.version matches the article-craft package version (when the
+  package is importable or a pyproject.toml sits above the skill; otherwise
+  the check is skipped with a note)
 - body present; SKILL.md < 500 lines (progressive disclosure guidance)
 - referenced relative paths resolve (one level deep preferred)
 - workflows/templates/checklists/references files parse as markdown with
@@ -24,6 +27,45 @@ import sys
 from pathlib import Path
 
 import yaml
+
+
+def _package_version(skill_dir: Path) -> str | None:
+    """Best-effort article-craft package version. None when unavailable.
+
+    Order: importlib.metadata (installed distributions), then a pyproject.toml
+    two directories up (repo checkout). The pyproject fallback uses a narrow
+    regex on the first `version = "x.y.z"` inside the [project] table only;
+    a full TOML parse is intentionally avoided so the validator keeps
+    working on Python 3.11 before tomllib-free dependence and so a random
+    version string in a later table (tool.age, tool.pytest, etc.) can never
+    be picked up by mistake.
+    """
+    try:
+        from importlib import metadata as _metadata
+
+        return _metadata.version("article-craft")
+    except Exception:
+        pass
+
+    pyproject = skill_dir.parent.parent / "pyproject.toml"
+    if not pyproject.is_file():
+        return None
+    try:
+        text = pyproject.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    in_project = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("["):
+            in_project = stripped == "[project]"
+            continue
+        if in_project:
+            m = re.match(r'version\s*=\s*"(\d+\.\d+\.\d+)"', stripped)
+            if m:
+                return m.group(1)
+    return None
+
 
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 MAX_NAME_LEN = 64
@@ -94,6 +136,7 @@ def validate(skill_dir: Path) -> int:
         elif len(compat) > MAX_COMPAT_LEN:
             error(f"compatibility exceeds {MAX_COMPAT_LEN} chars ({len(compat)})")
     metadata_field = meta.get("metadata")
+    skill_version: str | None = None
     if metadata_field is not None:
         if not isinstance(metadata_field, dict):
             error("metadata must be a mapping")
@@ -101,6 +144,23 @@ def validate(skill_dir: Path) -> int:
             for key, value in metadata_field.items():
                 if not isinstance(key, str) or not isinstance(value, (str, int, float, bool)):
                     error(f"metadata values must be scalar (key {key!r} is {type(value).__name__})")
+            version = metadata_field.get("version")
+            if version is not None:
+                if not isinstance(version, str) or not re.match(r"^\d+\.\d+\.\d+$", version):
+                    error("metadata.version must be a semver string like '2.2.0'")
+                else:
+                    skill_version = version
+
+    # --- version sync with the package --------------------------------------
+    if skill_version is not None:
+        pkg_version = _package_version(skill_dir)
+        if pkg_version is None:
+            warning("could not determine package version; skipping version-sync check")
+        elif skill_version != pkg_version:
+            error(
+                f"SKILL.md metadata.version is {skill_version} but the "
+                f"article-craft package is {pkg_version} — keep them in sync"
+            )
 
     # --- body ------------------------------------------------------------
     body = text[m.end() :]
