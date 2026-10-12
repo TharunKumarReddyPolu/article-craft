@@ -37,6 +37,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: pypi
+    permissions:
+      id-token: write # PyPI Trusted Publishing (OIDC) — no API token secret needed
     steps:
       - uses: actions/checkout@v7
 
